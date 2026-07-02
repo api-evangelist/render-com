@@ -1,0 +1,136 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Render
+providerId: render-com
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- Cloud Hosting
+- PaaS
+- Deployment
+- Databases
+- Plans
+description: >-
+  Render bills on two axes: a workspace plan (which unlocks team, security, and
+  support features) and metered per-resource usage (compute instances, managed
+  Postgres and Key Value datastores, persistent disks, bandwidth, and build
+  minutes). The Render REST API and its WebSocket log stream are included at no
+  additional charge on every plan; you pay only for the resources you provision
+  through it. Workspace plans (effective 2026) are Hobby (free), Pro (flat
+  monthly with unlimited members), Scale (flat monthly with organizations, SSO,
+  SCIM, RBAC, and audit logs), and Enterprise (custom). Exact instance and
+  datastore rates should be reconciled against the Render pricing page.
+notes: >-
+  Render migrated from per-seat billing to flat-fee workspace plans in 2026;
+  legacy per-seat plans are being phased out. Prices below reflect published
+  figures at the review date and may change - verify on the pricing page during
+  reconciliation. Compute and datastore charges are prorated per second while a
+  resource is running.
+sources:
+- https://render.com/pricing
+- https://render.com/docs/new-workspace-plans
+- https://render.com/docs/platform-features-by-plan
+plans:
+- id: render-hobby
+  name: Hobby
+  type: free
+  description: >-
+    Free workspace plan for personal projects and solo builders. Includes the
+    full REST API and WebSocket log streaming, free static sites, and free-tier
+    web services and datastores (which spin down when idle). Capped at 25 total
+    services per workspace. You still pay for any paid instance types or
+    datastores you provision.
+  entries:
+  - label: Workspace Fee
+    name: workspace_fee
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '0.00'
+    userMultiplied: false
+  elements:
+  - name: Full REST API and WebSocket Log Streaming
+  - name: Free Static Sites
+  - name: Free-Tier Web Services (spin down when idle)
+  - name: Up to 25 Services per Workspace
+- id: render-pro
+  name: Pro
+  type: paid
+  description: >-
+    Flat monthly workspace plan with unlimited team members (no per-seat fee),
+    higher limits, zero-downtime deploys, autoscaling, and standard support.
+    Usage-based compute, datastore, disk, and bandwidth charges are billed on
+    top of the flat fee.
+  entries:
+  - label: Workspace Fee
+    name: workspace_fee
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '25.00'
+    userMultiplied: false
+  elements:
+  - name: Unlimited Team Members
+  - name: Autoscaling
+  - name: Zero-Downtime Deploys
+  - name: Standard Support
+- id: render-scale
+  name: Scale
+  type: paid
+  description: >-
+    Flat monthly workspace plan for larger teams, adding organizations for
+    managing multiple workspaces, SSO, SCIM, advanced RBAC roles, organization
+    audit logs, HIPAA-enabled workspaces, and priority support. Usage-based
+    resource charges apply on top.
+  entries:
+  - label: Workspace Fee
+    name: workspace_fee
+    type: flat
+    metric: subscription
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: '499.00'
+    userMultiplied: false
+  elements:
+  - name: Organizations (multiple workspaces)
+  - name: SSO and SCIM
+  - name: Advanced RBAC Roles
+  - name: Organization Audit Logs
+  - name: HIPAA-Enabled Workspaces
+  - name: Priority Support
+- id: render-enterprise
+  name: Enterprise
+  type: enterprise
+  description: >-
+    Custom plan for teams needing tailored commercial terms, higher limits,
+    dedicated support, and additional compliance beyond Scale. Contact Render
+    sales.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Custom Commercial Terms
+  - name: Tailored Limits
+  - name: Dedicated Support
+  - name: Advanced Compliance
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,2235 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Render API",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{apiKey}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List services",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services"
+          },
+          "docs": "List services"
+        },
+        {
+          "info": {
+            "name": "Create a service",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"type\": \"web_service\",\n  \"name\": \"my-service\",\n  \"ownerId\": \"\",\n  \"repo\": \"https://github.com/owner/repo\"\n}"
+            }
+          },
+          "docs": "Create a service"
+        },
+        {
+          "info": {
+            "name": "Retrieve a service",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "Retrieve a service"
+        },
+        {
+          "info": {
+            "name": "Update a service",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/services/:serviceId",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a service"
+        },
+        {
+          "info": {
+            "name": "Delete a service",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/services/:serviceId",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "Delete a service"
+        },
+        {
+          "info": {
+            "name": "Restart a service",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/restart",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "Restart a service"
+        },
+        {
+          "info": {
+            "name": "Suspend a service",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/suspend",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "Suspend a service"
+        },
+        {
+          "info": {
+            "name": "Resume a service",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/resume",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "Resume a service"
+        },
+        {
+          "info": {
+            "name": "Scale a service",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/scale",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"numInstances\": 2\n}"
+            }
+          },
+          "docs": "Scale a service"
+        },
+        {
+          "info": {
+            "name": "Update autoscaling",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.render.com/v1/services/:serviceId/autoscaling",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update autoscaling"
+        },
+        {
+          "info": {
+            "name": "Purge static site cache",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/cache/purge",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "Purge static site cache"
+        },
+        {
+          "info": {
+            "name": "Create a service preview",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/preview",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a service preview"
+        },
+        {
+          "info": {
+            "name": "List service events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId/events",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "List service events"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Deploys",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List deploys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId/deploys",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "List deploys"
+        },
+        {
+          "info": {
+            "name": "Trigger a deploy",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/deploys",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"clearCache\": \"do_not_clear\"\n}"
+            }
+          },
+          "docs": "Trigger a deploy"
+        },
+        {
+          "info": {
+            "name": "Retrieve a deploy",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId/deploys/:deployId",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              },
+              {
+                "name": "deployId",
+                "value": "",
+                "type": "path",
+                "description": "deployId"
+              }
+            ]
+          },
+          "docs": "Retrieve a deploy"
+        },
+        {
+          "info": {
+            "name": "Cancel a deploy",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/deploys/:deployId/cancel",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              },
+              {
+                "name": "deployId",
+                "value": "",
+                "type": "path",
+                "description": "deployId"
+              }
+            ]
+          },
+          "docs": "Cancel a deploy"
+        },
+        {
+          "info": {
+            "name": "Roll back a service",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/rollback",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"deployId\": \"\"\n}"
+            }
+          },
+          "docs": "Roll back a service"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Custom Domains",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List custom domains",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId/custom-domains",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "List custom domains"
+        },
+        {
+          "info": {
+            "name": "Add a custom domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/custom-domains",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"www.example.com\"\n}"
+            }
+          },
+          "docs": "Add a custom domain"
+        },
+        {
+          "info": {
+            "name": "Retrieve a custom domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId/custom-domains/:customDomainIdOrName",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              },
+              {
+                "name": "customDomainIdOrName",
+                "value": "",
+                "type": "path",
+                "description": "customDomainIdOrName"
+              }
+            ]
+          },
+          "docs": "Retrieve a custom domain"
+        },
+        {
+          "info": {
+            "name": "Delete a custom domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/services/:serviceId/custom-domains/:customDomainIdOrName",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              },
+              {
+                "name": "customDomainIdOrName",
+                "value": "",
+                "type": "path",
+                "description": "customDomainIdOrName"
+              }
+            ]
+          },
+          "docs": "Delete a custom domain"
+        },
+        {
+          "info": {
+            "name": "Verify a custom domain",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/custom-domains/:customDomainIdOrName/verify",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              },
+              {
+                "name": "customDomainIdOrName",
+                "value": "",
+                "type": "path",
+                "description": "customDomainIdOrName"
+              }
+            ]
+          },
+          "docs": "Verify a custom domain"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Environment Variables & Secret Files",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List environment variables",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId/env-vars",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "List environment variables"
+        },
+        {
+          "info": {
+            "name": "Replace environment variables",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.render.com/v1/services/:serviceId/env-vars",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "[\n  { \"key\": \"KEY\", \"value\": \"value\" }\n]"
+            }
+          },
+          "docs": "Replace environment variables"
+        },
+        {
+          "info": {
+            "name": "Retrieve an environment variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId/env-vars/:envVarKey",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              },
+              {
+                "name": "envVarKey",
+                "value": "",
+                "type": "path",
+                "description": "envVarKey"
+              }
+            ]
+          },
+          "docs": "Retrieve an environment variable"
+        },
+        {
+          "info": {
+            "name": "Add or update an environment variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.render.com/v1/services/:serviceId/env-vars/:envVarKey",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              },
+              {
+                "name": "envVarKey",
+                "value": "",
+                "type": "path",
+                "description": "envVarKey"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"value\": \"value\"\n}"
+            }
+          },
+          "docs": "Add or update an environment variable"
+        },
+        {
+          "info": {
+            "name": "Delete an environment variable",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/services/:serviceId/env-vars/:envVarKey",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              },
+              {
+                "name": "envVarKey",
+                "value": "",
+                "type": "path",
+                "description": "envVarKey"
+              }
+            ]
+          },
+          "docs": "Delete an environment variable"
+        },
+        {
+          "info": {
+            "name": "List secret files",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId/secret-files",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "List secret files"
+        },
+        {
+          "info": {
+            "name": "Replace secret files",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.render.com/v1/services/:serviceId/secret-files",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "[]"
+            }
+          },
+          "docs": "Replace secret files"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Environment Groups",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List environment groups",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/env-groups"
+          },
+          "docs": "List environment groups"
+        },
+        {
+          "info": {
+            "name": "Create an environment group",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/env-groups",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"shared-config\",\n  \"ownerId\": \"\"\n}"
+            }
+          },
+          "docs": "Create an environment group"
+        },
+        {
+          "info": {
+            "name": "Retrieve an environment group",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/env-groups/:envGroupId",
+            "params": [
+              {
+                "name": "envGroupId",
+                "value": "",
+                "type": "path",
+                "description": "envGroupId"
+              }
+            ]
+          },
+          "docs": "Retrieve an environment group"
+        },
+        {
+          "info": {
+            "name": "Update an environment group",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/env-groups/:envGroupId",
+            "params": [
+              {
+                "name": "envGroupId",
+                "value": "",
+                "type": "path",
+                "description": "envGroupId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an environment group"
+        },
+        {
+          "info": {
+            "name": "Delete an environment group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/env-groups/:envGroupId",
+            "params": [
+              {
+                "name": "envGroupId",
+                "value": "",
+                "type": "path",
+                "description": "envGroupId"
+              }
+            ]
+          },
+          "docs": "Delete an environment group"
+        },
+        {
+          "info": {
+            "name": "Add or update a variable in a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.render.com/v1/env-groups/:envGroupId/env-vars/:envVarKey",
+            "params": [
+              {
+                "name": "envGroupId",
+                "value": "",
+                "type": "path",
+                "description": "envGroupId"
+              },
+              {
+                "name": "envVarKey",
+                "value": "",
+                "type": "path",
+                "description": "envVarKey"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"value\": \"value\"\n}"
+            }
+          },
+          "docs": "Add or update a variable in a group"
+        },
+        {
+          "info": {
+            "name": "Delete a variable from a group",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/env-groups/:envGroupId/env-vars/:envVarKey",
+            "params": [
+              {
+                "name": "envGroupId",
+                "value": "",
+                "type": "path",
+                "description": "envGroupId"
+              },
+              {
+                "name": "envVarKey",
+                "value": "",
+                "type": "path",
+                "description": "envVarKey"
+              }
+            ]
+          },
+          "docs": "Delete a variable from a group"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Postgres",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Postgres instances",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/postgres"
+          },
+          "docs": "List Postgres instances"
+        },
+        {
+          "info": {
+            "name": "Create a Postgres instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/postgres",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"my-db\",\n  \"ownerId\": \"\",\n  \"plan\": \"starter\"\n}"
+            }
+          },
+          "docs": "Create a Postgres instance"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Postgres instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/postgres/:postgresId",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ]
+          },
+          "docs": "Retrieve a Postgres instance"
+        },
+        {
+          "info": {
+            "name": "Update a Postgres instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/postgres/:postgresId",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a Postgres instance"
+        },
+        {
+          "info": {
+            "name": "Delete a Postgres instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/postgres/:postgresId",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ]
+          },
+          "docs": "Delete a Postgres instance"
+        },
+        {
+          "info": {
+            "name": "Retrieve connection info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/postgres/:postgresId/connection-info",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ]
+          },
+          "docs": "Retrieve connection info"
+        },
+        {
+          "info": {
+            "name": "Suspend a Postgres instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/postgres/:postgresId/suspend",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ]
+          },
+          "docs": "Suspend a Postgres instance"
+        },
+        {
+          "info": {
+            "name": "Resume a Postgres instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/postgres/:postgresId/resume",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ]
+          },
+          "docs": "Resume a Postgres instance"
+        },
+        {
+          "info": {
+            "name": "Trigger a Postgres export",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/postgres/:postgresId/export",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ]
+          },
+          "docs": "Trigger a Postgres export"
+        },
+        {
+          "info": {
+            "name": "List Postgres exports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/postgres/:postgresId/exports",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ]
+          },
+          "docs": "List Postgres exports"
+        },
+        {
+          "info": {
+            "name": "Retrieve point-in-time recovery info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/postgres/:postgresId/recovery-info",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ]
+          },
+          "docs": "Retrieve point-in-time recovery info"
+        },
+        {
+          "info": {
+            "name": "Trigger a point-in-time recovery",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/postgres/:postgresId/recovery",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Trigger a point-in-time recovery"
+        },
+        {
+          "info": {
+            "name": "Trigger a Postgres failover",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/postgres/:postgresId/failover",
+            "params": [
+              {
+                "name": "postgresId",
+                "value": "",
+                "type": "path",
+                "description": "postgresId"
+              }
+            ]
+          },
+          "docs": "Trigger a Postgres failover"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Key Value",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Key Value instances",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/key-value"
+          },
+          "docs": "List Key Value instances"
+        },
+        {
+          "info": {
+            "name": "Create a Key Value instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/key-value",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"my-cache\",\n  \"ownerId\": \"\",\n  \"plan\": \"starter\"\n}"
+            }
+          },
+          "docs": "Create a Key Value instance"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Key Value instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/key-value/:keyValueId",
+            "params": [
+              {
+                "name": "keyValueId",
+                "value": "",
+                "type": "path",
+                "description": "keyValueId"
+              }
+            ]
+          },
+          "docs": "Retrieve a Key Value instance"
+        },
+        {
+          "info": {
+            "name": "Update a Key Value instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/key-value/:keyValueId",
+            "params": [
+              {
+                "name": "keyValueId",
+                "value": "",
+                "type": "path",
+                "description": "keyValueId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a Key Value instance"
+        },
+        {
+          "info": {
+            "name": "Delete a Key Value instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/key-value/:keyValueId",
+            "params": [
+              {
+                "name": "keyValueId",
+                "value": "",
+                "type": "path",
+                "description": "keyValueId"
+              }
+            ]
+          },
+          "docs": "Delete a Key Value instance"
+        },
+        {
+          "info": {
+            "name": "Retrieve connection info",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/key-value/:keyValueId/connection-info",
+            "params": [
+              {
+                "name": "keyValueId",
+                "value": "",
+                "type": "path",
+                "description": "keyValueId"
+              }
+            ]
+          },
+          "docs": "Retrieve connection info"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Jobs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List one-off jobs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId/jobs",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ]
+          },
+          "docs": "List one-off jobs"
+        },
+        {
+          "info": {
+            "name": "Create a one-off job",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/services/:serviceId/jobs",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{\n  \"startCommand\": \"npm run migrate\"\n}"
+            }
+          },
+          "docs": "Create a one-off job"
+        },
+        {
+          "info": {
+            "name": "Retrieve a one-off job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/services/:serviceId/jobs/:jobId",
+            "params": [
+              {
+                "name": "serviceId",
+                "value": "",
+                "type": "path",
+                "description": "serviceId"
+              },
+              {
+                "name": "jobId",
+                "value": "",
+                "type": "path",
+                "description": "jobId"
+              }
+            ]
+          },
+          "docs": "Retrieve a one-off job"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Disks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List disks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/disks"
+          },
+          "docs": "List disks"
+        },
+        {
+          "info": {
+            "name": "Add a disk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/disks",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"serviceId\": \"\",\n  \"name\": \"data\",\n  \"mountPath\": \"/var/data\",\n  \"sizeGB\": 10\n}"
+            }
+          },
+          "docs": "Add a disk"
+        },
+        {
+          "info": {
+            "name": "Retrieve a disk",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/disks/:diskId",
+            "params": [
+              {
+                "name": "diskId",
+                "value": "",
+                "type": "path",
+                "description": "diskId"
+              }
+            ]
+          },
+          "docs": "Retrieve a disk"
+        },
+        {
+          "info": {
+            "name": "Update a disk",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/disks/:diskId",
+            "params": [
+              {
+                "name": "diskId",
+                "value": "",
+                "type": "path",
+                "description": "diskId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a disk"
+        },
+        {
+          "info": {
+            "name": "Delete a disk",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/disks/:diskId",
+            "params": [
+              {
+                "name": "diskId",
+                "value": "",
+                "type": "path",
+                "description": "diskId"
+              }
+            ]
+          },
+          "docs": "Delete a disk"
+        },
+        {
+          "info": {
+            "name": "List disk snapshots",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/disks/:diskId/snapshots",
+            "params": [
+              {
+                "name": "diskId",
+                "value": "",
+                "type": "path",
+                "description": "diskId"
+              }
+            ]
+          },
+          "docs": "List disk snapshots"
+        },
+        {
+          "info": {
+            "name": "Restore a disk from a snapshot",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/disks/:diskId/snapshots/restore",
+            "params": [
+              {
+                "name": "diskId",
+                "value": "",
+                "type": "path",
+                "description": "diskId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Restore a disk from a snapshot"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Blueprints",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List Blueprints",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/blueprints"
+          },
+          "docs": "List Blueprints"
+        },
+        {
+          "info": {
+            "name": "Validate a Blueprint spec",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/blueprints/validate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Validate a Blueprint spec"
+        },
+        {
+          "info": {
+            "name": "Retrieve a Blueprint",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/blueprints/:blueprintId",
+            "params": [
+              {
+                "name": "blueprintId",
+                "value": "",
+                "type": "path",
+                "description": "blueprintId"
+              }
+            ]
+          },
+          "docs": "Retrieve a Blueprint"
+        },
+        {
+          "info": {
+            "name": "Update a Blueprint",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/blueprints/:blueprintId",
+            "params": [
+              {
+                "name": "blueprintId",
+                "value": "",
+                "type": "path",
+                "description": "blueprintId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a Blueprint"
+        },
+        {
+          "info": {
+            "name": "Disconnect a Blueprint",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/blueprints/:blueprintId",
+            "params": [
+              {
+                "name": "blueprintId",
+                "value": "",
+                "type": "path",
+                "description": "blueprintId"
+              }
+            ]
+          },
+          "docs": "Disconnect a Blueprint"
+        },
+        {
+          "info": {
+            "name": "List Blueprint syncs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/blueprints/:blueprintId/syncs",
+            "params": [
+              {
+                "name": "blueprintId",
+                "value": "",
+                "type": "path",
+                "description": "blueprintId"
+              }
+            ]
+          },
+          "docs": "List Blueprint syncs"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Projects & Environments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List projects",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/projects"
+          },
+          "docs": "List projects"
+        },
+        {
+          "info": {
+            "name": "Create a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/projects",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"my-project\",\n  \"ownerId\": \"\"\n}"
+            }
+          },
+          "docs": "Create a project"
+        },
+        {
+          "info": {
+            "name": "Retrieve a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/projects/:projectId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "projectId"
+              }
+            ]
+          },
+          "docs": "Retrieve a project"
+        },
+        {
+          "info": {
+            "name": "Update a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/projects/:projectId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "projectId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a project"
+        },
+        {
+          "info": {
+            "name": "Delete a project",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/projects/:projectId",
+            "params": [
+              {
+                "name": "projectId",
+                "value": "",
+                "type": "path",
+                "description": "projectId"
+              }
+            ]
+          },
+          "docs": "Delete a project"
+        },
+        {
+          "info": {
+            "name": "List environments",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/environments"
+          },
+          "docs": "List environments"
+        },
+        {
+          "info": {
+            "name": "Create an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/environments",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"projectId\": \"\",\n  \"name\": \"production\"\n}"
+            }
+          },
+          "docs": "Create an environment"
+        },
+        {
+          "info": {
+            "name": "Retrieve an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/environments/:environmentId",
+            "params": [
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path",
+                "description": "environmentId"
+              }
+            ]
+          },
+          "docs": "Retrieve an environment"
+        },
+        {
+          "info": {
+            "name": "Update an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/environments/:environmentId",
+            "params": [
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path",
+                "description": "environmentId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an environment"
+        },
+        {
+          "info": {
+            "name": "Delete an environment",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/environments/:environmentId",
+            "params": [
+              {
+                "name": "environmentId",
+                "value": "",
+                "type": "path",
+                "description": "environmentId"
+              }
+            ]
+          },
+          "docs": "Delete an environment"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Workspaces & Members",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List workspaces",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/owners"
+          },
+          "docs": "List workspaces"
+        },
+        {
+          "info": {
+            "name": "Retrieve a workspace",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/owners/:ownerId",
+            "params": [
+              {
+                "name": "ownerId",
+                "value": "",
+                "type": "path",
+                "description": "ownerId"
+              }
+            ]
+          },
+          "docs": "Retrieve a workspace"
+        },
+        {
+          "info": {
+            "name": "List workspace members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/owners/:ownerId/members",
+            "params": [
+              {
+                "name": "ownerId",
+                "value": "",
+                "type": "path",
+                "description": "ownerId"
+              }
+            ]
+          },
+          "docs": "List workspace members"
+        },
+        {
+          "info": {
+            "name": "Update a member's role",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/owners/:ownerId/members/:userId",
+            "params": [
+              {
+                "name": "ownerId",
+                "value": "",
+                "type": "path",
+                "description": "ownerId"
+              },
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "userId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a member's role"
+        },
+        {
+          "info": {
+            "name": "Remove a member",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/owners/:ownerId/members/:userId",
+            "params": [
+              {
+                "name": "ownerId",
+                "value": "",
+                "type": "path",
+                "description": "ownerId"
+              },
+              {
+                "name": "userId",
+                "value": "",
+                "type": "path",
+                "description": "userId"
+              }
+            ]
+          },
+          "docs": "Remove a member"
+        },
+        {
+          "info": {
+            "name": "List workspace audit logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/owners/:ownerId/audit-logs",
+            "params": [
+              {
+                "name": "ownerId",
+                "value": "",
+                "type": "path",
+                "description": "ownerId"
+              }
+            ]
+          },
+          "docs": "List workspace audit logs"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Registry Credentials",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List registry credentials",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/registrycredentials"
+          },
+          "docs": "List registry credentials"
+        },
+        {
+          "info": {
+            "name": "Create a registry credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/registrycredentials",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Create a registry credential"
+        },
+        {
+          "info": {
+            "name": "Retrieve a registry credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/registrycredentials/:registryCredentialId",
+            "params": [
+              {
+                "name": "registryCredentialId",
+                "value": "",
+                "type": "path",
+                "description": "registryCredentialId"
+              }
+            ]
+          },
+          "docs": "Retrieve a registry credential"
+        },
+        {
+          "info": {
+            "name": "Update a registry credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/registrycredentials/:registryCredentialId",
+            "params": [
+              {
+                "name": "registryCredentialId",
+                "value": "",
+                "type": "path",
+                "description": "registryCredentialId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a registry credential"
+        },
+        {
+          "info": {
+            "name": "Delete a registry credential",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/registrycredentials/:registryCredentialId",
+            "params": [
+              {
+                "name": "registryCredentialId",
+                "value": "",
+                "type": "path",
+                "description": "registryCredentialId"
+              }
+            ]
+          },
+          "docs": "Delete a registry credential"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Metrics",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get CPU metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/metrics/cpu?resource=",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "resource"
+              }
+            ]
+          },
+          "docs": "Get CPU metrics"
+        },
+        {
+          "info": {
+            "name": "Get memory metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/metrics/memory?resource=",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "resource"
+              }
+            ]
+          },
+          "docs": "Get memory metrics"
+        },
+        {
+          "info": {
+            "name": "Get bandwidth metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/metrics/bandwidth?resource=",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "resource"
+              }
+            ]
+          },
+          "docs": "Get bandwidth metrics"
+        },
+        {
+          "info": {
+            "name": "Get instance count metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/metrics/instance-count?resource=",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "resource"
+              }
+            ]
+          },
+          "docs": "Get instance count metrics"
+        },
+        {
+          "info": {
+            "name": "Get HTTP request metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/metrics/http-requests?resource=",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "resource"
+              }
+            ]
+          },
+          "docs": "Get HTTP request metrics"
+        },
+        {
+          "info": {
+            "name": "Get active connection metrics",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/metrics/active-connections?resource=",
+            "params": [
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "resource"
+              }
+            ]
+          },
+          "docs": "Get active connection metrics"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Logs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List logs (historical, REST)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/logs?ownerId=&resource=",
+            "params": [
+              {
+                "name": "ownerId",
+                "value": "",
+                "type": "query",
+                "description": "ownerId"
+              },
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "resource"
+              }
+            ]
+          },
+          "docs": "List logs (historical, REST)"
+        },
+        {
+          "info": {
+            "name": "Subscribe to new logs (WebSocket upgrade, wss://api.render.com/v1/logs/subscribe)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/logs/subscribe?ownerId=&resource=",
+            "params": [
+              {
+                "name": "ownerId",
+                "value": "",
+                "type": "query",
+                "description": "ownerId"
+              },
+              {
+                "name": "resource",
+                "value": "",
+                "type": "query",
+                "description": "resource"
+              }
+            ]
+          },
+          "docs": "Subscribe to new logs (WebSocket upgrade, wss://api.render.com/v1/logs/subscribe)"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Webhooks",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List webhooks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/webhooks"
+          },
+          "docs": "List webhooks"
+        },
+        {
+          "info": {
+            "name": "Create a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.render.com/v1/webhooks",
+            "body": {
+              "type": "json",
+              "data": "{\n  \"name\": \"my-webhook\",\n  \"ownerId\": \"\",\n  \"url\": \"https://example.com/hook\"\n}"
+            }
+          },
+          "docs": "Create a webhook"
+        },
+        {
+          "info": {
+            "name": "Retrieve a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/webhooks/:webhookId",
+            "params": [
+              {
+                "name": "webhookId",
+                "value": "",
+                "type": "path",
+                "description": "webhookId"
+              }
+            ]
+          },
+          "docs": "Retrieve a webhook"
+        },
+        {
+          "info": {
+            "name": "Update a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://api.render.com/v1/webhooks/:webhookId",
+            "params": [
+              {
+                "name": "webhookId",
+                "value": "",
+                "type": "path",
+                "description": "webhookId"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update a webhook"
+        },
+        {
+          "info": {
+            "name": "Delete a webhook",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://api.render.com/v1/webhooks/:webhookId",
+            "params": [
+              {
+                "name": "webhookId",
+                "value": "",
+                "type": "path",
+                "description": "webhookId"
+              }
+            ]
+          },
+          "docs": "Delete a webhook"
+        },
+        {
+          "info": {
+            "name": "List webhook events",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.render.com/v1/webhooks/:webhookId/events",
+            "params": [
+              {
+                "name": "webhookId",
+                "value": "",
+                "type": "path",
+                "description": "webhookId"
+              }
+            ]
+          },
+          "docs": "List webhook events"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,185 @@
+aid: render-com
+name: Render
+review:
+  question: Does Render expose a documented public WebSocket API?
+  answer: true
+  date: '2026-07-02'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: true
+  asyncapiScopeNote: |
+    Render publishes a documented public WebSocket endpoint for real-time log
+    streaming: "Subscribe to new logs" at GET
+    https://api.render.com/v1/logs/subscribe, which upgrades the connection to a
+    WebSocket (wss://api.render.com/v1/logs/subscribe) and pushes log messages
+    to the client as they are generated. Because this is a genuine server-push
+    WebSocket surface (not SSE and not a plain REST endpoint), an AsyncAPI 2.6
+    document was authored at asyncapi/render-com-asyncapi.yml modeling the wss
+    server, the /logs/subscribe channel with its ws query-parameter bindings
+    (ownerId, resource, level, text, etc.), and the streamed LogMessage payload.
+    Historical log retrieval is a separate request/response REST endpoint (GET
+    /logs) and is modeled in the OpenAPI document, not AsyncAPI.
+findings:
+  summary: |
+    Render exposes a documented public WebSocket API. The primary surface is the
+    Render REST API at https://api.render.com/v1 (Bearer API key auth), which
+    covers services, deploys, custom domains, environment variables and groups,
+    secret files, managed Postgres and Key Value datastores, one-off jobs,
+    persistent disks, Blueprints, projects and environments, workspaces and
+    members, registry credentials, metrics, logs, and webhooks. In addition to
+    the REST surface, Render documents a WebSocket log-subscription endpoint -
+    GET /v1/logs/subscribe - that performs an HTTP-to-WebSocket upgrade (HTTP
+    101) and then streams log messages in real time as they are generated,
+    filtered by ownerId and one or more resource IDs (all resources must be in
+    the same region and belong to the same owner). This is a real, documented
+    WebSocket (wss) transport, distinct from the request/response GET /logs
+    endpoint used for historical log queries.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://api.render.com/v1
+      documented: true
+      note: Full control-plane REST API. Bearer API key auth. Cursor and timestamp pagination.
+    - protocol: WebSocket
+      scheme: wss
+      baseURL: wss://api.render.com/v1/logs/subscribe
+      documented: true
+      note: >-
+        "Subscribe to new logs" - opens a WebSocket that streams log messages in
+        real time. Documented at api-docs.render.com/reference/subscribe-logs.
+        Query params ownerId (required), resource (required, array), plus
+        optional level, text, host, statusCode, method, task, taskRun, type,
+        path, direction. HTTP 101 on successful upgrade.
+    - protocol: SSE
+      scheme: https
+      documented: false
+      note: >-
+        Render does not use Server-Sent Events for its API log streaming; the
+        real-time surface is a WebSocket, and historical logs are a plain REST
+        GET /logs endpoint.
+  logStreamNote: |
+    Do not confuse two different Render features that both use the phrase "log
+    stream": (1) the WebSocket log SUBSCRIPTION on the REST API
+    (GET /v1/logs/subscribe) modeled here, and (2) Render "Log Streams", a
+    dashboard/config feature that forwards a service's logs to an EXTERNAL
+    logging provider over syslog (HOST:PORT) or HTTPS. The latter is outbound
+    forwarding configured on Render, not a client-facing streaming API, and is
+    not a WebSocket the consumer connects to.
+  endpointsConfirmedRest:
+    - GET    https://api.render.com/v1/services
+    - POST   https://api.render.com/v1/services
+    - GET    https://api.render.com/v1/services/{serviceId}
+    - PATCH  https://api.render.com/v1/services/{serviceId}
+    - DELETE https://api.render.com/v1/services/{serviceId}
+    - POST   https://api.render.com/v1/services/{serviceId}/restart
+    - POST   https://api.render.com/v1/services/{serviceId}/suspend
+    - POST   https://api.render.com/v1/services/{serviceId}/resume
+    - POST   https://api.render.com/v1/services/{serviceId}/scale
+    - PUT    https://api.render.com/v1/services/{serviceId}/autoscaling
+    - POST   https://api.render.com/v1/services/{serviceId}/cache/purge
+    - POST   https://api.render.com/v1/services/{serviceId}/preview
+    - GET    https://api.render.com/v1/services/{serviceId}/events
+    - GET    https://api.render.com/v1/services/{serviceId}/deploys
+    - POST   https://api.render.com/v1/services/{serviceId}/deploys
+    - GET    https://api.render.com/v1/services/{serviceId}/deploys/{deployId}
+    - POST   https://api.render.com/v1/services/{serviceId}/deploys/{deployId}/cancel
+    - POST   https://api.render.com/v1/services/{serviceId}/rollback
+    - GET    https://api.render.com/v1/services/{serviceId}/custom-domains
+    - POST   https://api.render.com/v1/services/{serviceId}/custom-domains
+    - GET    https://api.render.com/v1/services/{serviceId}/custom-domains/{customDomainIdOrName}
+    - DELETE https://api.render.com/v1/services/{serviceId}/custom-domains/{customDomainIdOrName}
+    - POST   https://api.render.com/v1/services/{serviceId}/custom-domains/{customDomainIdOrName}/verify
+    - GET    https://api.render.com/v1/services/{serviceId}/env-vars
+    - PUT    https://api.render.com/v1/services/{serviceId}/env-vars
+    - GET    https://api.render.com/v1/services/{serviceId}/env-vars/{envVarKey}
+    - PUT    https://api.render.com/v1/services/{serviceId}/env-vars/{envVarKey}
+    - DELETE https://api.render.com/v1/services/{serviceId}/env-vars/{envVarKey}
+    - GET    https://api.render.com/v1/services/{serviceId}/secret-files
+    - PUT    https://api.render.com/v1/services/{serviceId}/secret-files
+    - GET    https://api.render.com/v1/services/{serviceId}/jobs
+    - POST   https://api.render.com/v1/services/{serviceId}/jobs
+    - GET    https://api.render.com/v1/services/{serviceId}/jobs/{jobId}
+    - GET    https://api.render.com/v1/blueprints
+    - POST   https://api.render.com/v1/blueprints/validate
+    - GET    https://api.render.com/v1/blueprints/{blueprintId}
+    - PATCH  https://api.render.com/v1/blueprints/{blueprintId}
+    - DELETE https://api.render.com/v1/blueprints/{blueprintId}
+    - GET    https://api.render.com/v1/blueprints/{blueprintId}/syncs
+    - GET    https://api.render.com/v1/disks
+    - POST   https://api.render.com/v1/disks
+    - GET    https://api.render.com/v1/disks/{diskId}
+    - PATCH  https://api.render.com/v1/disks/{diskId}
+    - DELETE https://api.render.com/v1/disks/{diskId}
+    - GET    https://api.render.com/v1/disks/{diskId}/snapshots
+    - POST   https://api.render.com/v1/disks/{diskId}/snapshots/restore
+    - GET    https://api.render.com/v1/owners
+    - GET    https://api.render.com/v1/owners/{ownerId}
+    - GET    https://api.render.com/v1/owners/{ownerId}/members
+    - PATCH  https://api.render.com/v1/owners/{ownerId}/members/{userId}
+    - DELETE https://api.render.com/v1/owners/{ownerId}/members/{userId}
+    - GET    https://api.render.com/v1/owners/{ownerId}/audit-logs
+    - GET    https://api.render.com/v1/registrycredentials
+    - POST   https://api.render.com/v1/registrycredentials
+    - GET    https://api.render.com/v1/registrycredentials/{registryCredentialId}
+    - PATCH  https://api.render.com/v1/registrycredentials/{registryCredentialId}
+    - DELETE https://api.render.com/v1/registrycredentials/{registryCredentialId}
+    - GET    https://api.render.com/v1/dedicated-ips
+    - GET    https://api.render.com/v1/notification-settings/overrides
+    - GET    https://api.render.com/v1/users
+    - GET    https://api.render.com/v1/postgres
+    - GET    https://api.render.com/v1/key-value
+    - GET    https://api.render.com/v1/projects
+    - GET    https://api.render.com/v1/webhooks
+    - GET    https://api.render.com/v1/logs
+  endpointsModeled:
+    - "POST/GET/PATCH/DELETE https://api.render.com/v1/postgres and /postgres/{postgresId} plus /connection-info, /suspend, /resume, /export, /exports, /recovery-info, /recovery, /failover (list GET /postgres confirmed; sub-operations follow Render's documented conventions)"
+    - "POST/GET/PATCH/DELETE https://api.render.com/v1/key-value and /key-value/{keyValueId} plus /connection-info (list GET /key-value confirmed)"
+    - "POST/GET/PATCH/DELETE https://api.render.com/v1/projects and /projects/{projectId} (list GET /projects confirmed)"
+    - "GET/POST/GET/PATCH/DELETE https://api.render.com/v1/environments and /environments/{environmentId}"
+    - "GET/POST/GET/PATCH/DELETE https://api.render.com/v1/env-groups, /env-groups/{envGroupId}, and /env-groups/{envGroupId}/env-vars/{envVarKey}"
+    - "GET https://api.render.com/v1/metrics/{cpu,memory,bandwidth,instance-count,http-requests,active-connections}"
+    - "POST/GET/PATCH/DELETE https://api.render.com/v1/webhooks and /webhooks/{webhookId} plus /events (list GET /webhooks confirmed)"
+  endpointConfidence: >-
+    Base URL https://api.render.com/v1 and the WebSocket log subscription are
+    confirmed against Render's public API reference. Service, deploy, custom
+    domain, env-var, secret-file, job, blueprint, disk, owner/member, registry
+    credential, dedicated-ip, notification-settings, and user endpoints were
+    read directly from the OpenAPI spec. Postgres, Key Value, projects,
+    environments, env-groups, metrics, and webhooks show their confirmed list
+    endpoints; their per-item CRUD sub-operations are modeled from Render's
+    consistent REST conventions and should be reconciled against the live
+    OpenAPI spec at https://api.render.com/openapi.json.
+sources:
+  - url: https://render.com/docs/api
+    type: Documentation
+    note: API overview - base URL https://api.render.com/v1, API-key auth, OpenAPI spec at https://api.render.com/openapi.json.
+  - url: https://api-docs.render.com/reference
+    type: APIReference
+    note: Interactive API reference for all resource groups.
+  - url: https://api-docs.render.com/reference/subscribe-logs
+    type: APIReference
+    note: Subscribe to new logs - documented WebSocket endpoint GET /v1/logs/subscribe streaming logs in real time (HTTP 101 upgrade).
+  - url: https://api-docs.render.com/reference/list-logs
+    type: APIReference
+    note: GET /v1/logs - historical log query with timestamp pagination (REST, not WebSocket).
+  - url: https://api-docs.render.com/reference/rate-limiting
+    type: APIReference
+    note: Documented per-endpoint rate limits (400/min GET, 30/min writes, etc.), 429 responses, Ratelimit-* headers.
+  - url: https://docs.render.com/log-streams
+    type: Documentation
+    note: Render "Log Streams" is outbound forwarding to an external syslog/HTTPS provider - not the client-facing WebSocket subscription.
+  - url: https://render.com/docs/new-workspace-plans
+    type: Documentation
+    note: 2026 workspace plans (Hobby free, Pro, Scale, Enterprise) replacing per-seat billing.
+actions:
+  asyncapiPath: asyncapi/render-com-asyncapi.yml
+  apisYmlUpdated: true
+  reason: |
+    Render exposes a real documented public WebSocket surface (the log
+    subscription endpoint), so the review answer is true and an AsyncAPI 2.6
+    document was authored for the wss://api.render.com/v1/logs/subscribe stream.
+    The apis.yml Render Logs API entry references both the OpenAPI (REST GET
+    /logs) and the AsyncAPI (WebSocket subscribe) properties so the two
+    transports are represented distinctly.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

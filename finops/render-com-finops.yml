@@ -1,0 +1,127 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Render
+providerId: render-com
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- Cloud Hosting
+- PaaS
+- Deployment
+- Databases
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Render spend. Render cost has two components: a flat workspace
+  plan fee (Hobby free, Pro, Scale, or Enterprise) and metered per-resource
+  usage. The dominant usage drivers are compute instances (per instance type -
+  Starter, Standard, Pro, Pro Plus, and larger - billed per second while
+  running and multiplied by instance count under manual or autoscaling), managed
+  Postgres and Key Value datastores (by plan/instance size and storage),
+  persistent disks (per GB), outbound bandwidth, and build minutes. The REST API
+  and WebSocket log stream are free; they are the control plane you use to
+  provision and scale the paid resources, so API-driven automation (autoscaling,
+  scheduled scale-down, suspend/resume) is the primary cost-optimization lever.
+notes: >-
+  Per-unit instance and datastore rates (for example Starter web service
+  ~$7/mo, Standard ~$25/mo, Pro ~$85/mo, Pro Plus ~$175/mo) reflect published
+  figures at the review date and should be reconciled against the Render pricing
+  page. Free-tier web services spin down when idle, which reduces cost but adds
+  cold-start latency.
+sources:
+- https://render.com/pricing
+- https://render.com/docs/new-workspace-plans
+- https://api-docs.render.com/reference/rate-limiting
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Render
+serviceCategory: Compute and Application Hosting
+billingModel:
+  pricingCategory: Usage-Based and Subscription
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Render Platform
+  ServiceCategory: Compute and Application Hosting
+  ProviderName: Render
+  PublisherName: Render
+  InvoiceIssuerName: Render
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: workspace_plan
+  description: Flat monthly workspace plan fee (Hobby free, Pro, Scale, Enterprise).
+  unit: subscription
+  aggregation: max
+  dimensions:
+  - workspace
+- name: compute_instance
+  description: Per-second compute for running service instances, priced by instance type and multiplied by instance count.
+  unit: instance-hours
+  aggregation: sum
+  dimensions:
+  - service
+  - instanceType
+  - project
+  - environment
+- name: postgres
+  description: Managed Render Postgres by plan/instance size plus provisioned storage.
+  unit: instance-hours
+  aggregation: sum
+  dimensions:
+  - postgres
+  - plan
+  - project
+- name: key_value
+  description: Managed Key Value (Redis-compatible) instances by plan/instance size.
+  unit: instance-hours
+  aggregation: sum
+  dimensions:
+  - keyValue
+  - plan
+  - project
+- name: disk_storage
+  description: Persistent disk storage attached to services, billed per GB.
+  unit: gb-months
+  aggregation: sum
+  dimensions:
+  - service
+  - disk
+- name: bandwidth
+  description: Outbound bandwidth above the included allowance.
+  unit: bytes
+  aggregation: sum
+  dimensions:
+  - service
+  - project
+- name: build_minutes
+  description: Pipeline build minutes above the included allowance.
+  unit: minutes
+  aggregation: sum
+  dimensions:
+  - service
+principles:
+- name: Visibility
+  description: Use the Metrics API and per-resource labels to track compute, datastore, disk, and bandwidth consumption by service, project, and environment.
+- name: Allocation
+  description: Organize services and datastores into projects and environments so spend maps to teams and workloads.
+- name: Optimization
+  description: Automate scale-down, suspend/resume, and autoscaling through the free REST API; right-size instance types; use free-tier and static sites where cold-start latency is acceptable; scope disks and bandwidth to actual need.
+- name: Accountability
+  description: Assign owners per project/workspace and review monthly resource usage against the flat plan fee and metered charges.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

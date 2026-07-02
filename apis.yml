@@ -1,0 +1,362 @@
+aid: render-com
+url: https://raw.githubusercontent.com/api-evangelist/render-com/refs/heads/main/apis.yml
+name: Render
+kind: company
+description: Render is a unified cloud application platform (PaaS) for building, deploying,
+  and scaling web services, static sites, background workers, cron jobs, and one-off
+  jobs alongside managed Postgres and Key Value (Redis-compatible) datastores. The
+  Render REST API (https://api.render.com/v1) exposes almost all Render Dashboard
+  capabilities - services, deploys, custom domains, environment variables and groups,
+  persistent disks, Blueprints, projects and environments, metrics, and logs - with
+  a documented WebSocket surface for real-time log streaming.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Cloud Hosting
+- PaaS
+- Deployment
+- Web Services
+- Databases
+- DevOps
+created: '2026-07-02'
+modified: '2026-07-02'
+specificationVersion: '0.19'
+apis:
+- aid: render-com:render-com-services-api
+  name: Render Services API
+  tags:
+  - Services
+  - Web Services
+  - Deployment
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-services
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://render.com/docs/api
+    type: Documentation
+  - url: https://api-docs.render.com/reference/list-services
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Create, list, retrieve, update, and delete Render services (web services,
+    static sites, private services, background workers, and cron jobs), plus scale,
+    autoscale, restart, suspend, resume, purge cache, and spin up service previews.
+- aid: render-com:render-com-deploys-api
+  name: Render Deploys API
+  tags:
+  - Deploys
+  - Builds
+  - Rollback
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/create-deploy
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/create-deploy
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Trigger, list, retrieve, and cancel deploys for a service, and roll a
+    service back to a previous deploy. Each deploy captures the build and release of
+    a commit or image for the service.
+- aid: render-com:render-com-custom-domains-api
+  name: Render Custom Domains API
+  tags:
+  - Custom Domains
+  - DNS
+  - TLS
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-custom-domains
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-custom-domains
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Add, list, retrieve, delete, and verify custom domains attached to a
+    service, including the DNS records and automatic TLS certificate provisioning
+    Render manages for each domain.
+- aid: render-com:render-com-env-vars-secret-files-api
+  name: Render Environment Variables & Secret Files API
+  tags:
+  - Environment Variables
+  - Secret Files
+  - Configuration
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/get-env-vars-for-service
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/get-env-vars-for-service
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Manage per-service environment variables and secret files - list, replace
+    the full set, and get, upsert, or delete individual keys and files that are injected
+    into a service at build and runtime.
+- aid: render-com:render-com-env-groups-api
+  name: Render Environment Groups API
+  tags:
+  - Environment Groups
+  - Shared Config
+  - Secrets
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-environment-groups
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-environment-groups
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Create and manage environment groups - reusable bundles of environment
+    variables and secret files that can be linked to multiple services - and upsert
+    or remove individual variables within a group.
+- aid: render-com:render-com-postgres-api
+  name: Render Postgres API
+  tags:
+  - Postgres
+  - Databases
+  - Managed Database
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-postgres
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-postgres
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Provision and manage fully managed Render Postgres instances - create,
+    list, retrieve, update, delete, fetch connection info, suspend and resume, run
+    and list exports, and drive point-in-time recovery and failover.
+- aid: render-com:render-com-key-value-api
+  name: Render Key Value API
+  tags:
+  - Key Value
+  - Redis
+  - Cache
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-key-value
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-key-value
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Create and manage Render Key Value instances - a Redis-compatible in-memory
+    datastore for caching and queues. List, create, retrieve, update, delete, and
+    fetch connection info. The legacy Redis API is deprecated in favor of Key Value.
+- aid: render-com:render-com-jobs-api
+  name: Render Jobs API
+  tags:
+  - Jobs
+  - One-Off Jobs
+  - Cron Jobs
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-jobs
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-jobs
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Create, list, and retrieve one-off jobs that run a command in a service's
+    environment as an ephemeral instance, and manage runs of scheduled cron job
+    services. Useful for migrations, batch tasks, and ad-hoc maintenance.
+- aid: render-com:render-com-disks-api
+  name: Render Disks API
+  tags:
+  - Disks
+  - Persistent Storage
+  - Snapshots
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-disks
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-disks
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Add, list, retrieve, update, and delete persistent disks attached to
+    services, plus list disk snapshots and restore a disk from a snapshot for durable
+    per-service storage.
+- aid: render-com:render-com-blueprints-api
+  name: Render Blueprints API
+  tags:
+  - Blueprints
+  - Infrastructure as Code
+  - render.yaml
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-blueprints
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-blueprints
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Manage Blueprints - Render's infrastructure-as-code driven by a render.yaml
+    file - by validating specs, listing, retrieving, updating, disconnecting
+    Blueprints, and inspecting their sync history.
+- aid: render-com:render-com-projects-environments-api
+  name: Render Projects & Environments API
+  tags:
+  - Projects
+  - Environments
+  - Organization
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-projects
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-projects
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Organize resources into projects and their environments (for example
+    production, staging, development) - create, list, retrieve, update, and delete
+    projects and environments and map services and datastores into them.
+- aid: render-com:render-com-workspaces-members-api
+  name: Render Workspaces & Members API
+  tags:
+  - Workspaces
+  - Owners
+  - Members
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-owners
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-owners
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: List and retrieve the workspaces (owners) your API key can access,
+    manage workspace members and their roles, and read workspace and organization
+    audit logs. Owner IDs scope most other resources in the API.
+- aid: render-com:render-com-metrics-api
+  name: Render Metrics API
+  tags:
+  - Metrics
+  - Observability
+  - Monitoring
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/get-cpu
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/get-cpu
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Query time-series metrics for services and datastores - CPU, memory,
+    bandwidth, instance count, HTTP request counts and latency, active connections,
+    and disk usage - for dashboards, alerting, and capacity planning.
+- aid: render-com:render-com-logs-api
+  name: Render Logs API
+  tags:
+  - Logs
+  - Streaming
+  - WebSocket
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-logs
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-logs
+    type: Documentation
+  - url: https://api-docs.render.com/reference/subscribe-logs
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: asyncapi/render-com-asyncapi.yml
+    type: AsyncAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Query historical logs across services, datastores, jobs, and cron jobs
+    with rich filters and timestamp pagination via GET /logs, and subscribe to
+    real-time logs over a documented WebSocket at wss://api.render.com/v1/logs/subscribe.
+- aid: render-com:render-com-webhooks-api
+  name: Render Webhooks API
+  tags:
+  - Webhooks
+  - Events
+  - Notifications
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://api-docs.render.com/reference/list-webhooks
+  baseURL: https://api.render.com/v1
+  properties:
+  - url: https://api-docs.render.com/reference/list-webhooks
+    type: APIReference
+  - url: openapi/render-com-openapi.yml
+    type: OpenAPI
+  - url: collections/render-com.postman_collection.json
+    type: PostmanCollection
+  - url: collections/render-com.opencollection.json
+    type: OpenCollection
+  description: Register and manage outbound webhooks that Render calls when platform
+    events occur (deploys, service and datastore lifecycle changes) - create, list,
+    retrieve, update, and delete webhooks and inspect their delivered events.
+common:
+- type: GitHubOrganization
+  url: https://github.com/renderinc
+- type: LinkedIn
+  url: https://www.linkedin.com/company/renderco
+- type: Website
+  url: https://render.com
+- type: Documentation
+  url: https://render.com/docs
+- type: Plans
+  url: plans/render-com-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/render-com-rate-limits.yml
+- type: FinOps
+  url: finops/render-com-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,91 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Render
+providerId: render-com
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- Cloud Hosting
+- PaaS
+- Rate Limiting
+- Quotas
+description: >-
+  The Render REST API enforces documented per-endpoint rate limits. Read
+  (GET) requests are allowed at up to 400 per minute, while most write
+  (POST/PATCH/DELETE) requests are limited to 30 per minute. Certain sensitive
+  operations have their own tighter limits: service create/modify deploy
+  operations at 20 per hour, custom domain operations at 50 per hour, deploy
+  hooks at 10 per minute per service, log endpoints at 30 per minute, and
+  one-off job creation at 100 per minute. Exceeding a limit returns HTTP 429,
+  and every response carries Ratelimit-Limit, Ratelimit-Remaining, and
+  Ratelimit-Reset headers so clients can pace themselves.
+notes: >-
+  Render recommends an exponential backoff schedule with random jitter on 429
+  responses. Limits below reflect Render's published API rate-limiting
+  documentation at the review date and may change - verify during
+  reconciliation.
+sources:
+- https://api-docs.render.com/reference/rate-limiting
+- https://render.com/docs/api
+responseCodes:
+  throttled: 429
+headers:
+- name: Ratelimit-Limit
+  description: Maximum requests permitted in the current window.
+- name: Ratelimit-Remaining
+  description: Number of requests remaining in the current rate limit window.
+- name: Ratelimit-Reset
+  description: Time at which the current window resets, in UTC epoch seconds.
+limits:
+- name: GET Requests
+  scope: account
+  metric: requests
+  limit: 400
+  timeFrame: minute
+  notes: General read requests.
+- name: Write Requests (POST/PATCH/DELETE)
+  scope: account
+  metric: requests
+  limit: 30
+  timeFrame: minute
+  notes: Default limit for most create, update, and delete operations.
+- name: Deploy / Service Create and Modify
+  scope: account
+  metric: requests
+  limit: 20
+  timeFrame: hour
+  notes: Creating or modifying services and triggering deploys.
+- name: Custom Domain Operations
+  scope: account
+  metric: requests
+  limit: 50
+  timeFrame: hour
+  notes: Adding and modifying custom domains.
+- name: Deploy Hooks
+  scope: service
+  metric: requests
+  limit: 10
+  timeFrame: minute
+  notes: Per-service deploy hook triggers.
+- name: Log Endpoints
+  scope: account
+  metric: requests
+  limit: 30
+  timeFrame: minute
+  notes: Applies to the logs query endpoint.
+- name: Job Creation
+  scope: account
+  metric: requests
+  limit: 100
+  timeFrame: minute
+  notes: Creating one-off jobs.
+policies:
+- name: Backoff Strategy
+  description: On a 429, retry using an exponential backoff schedule with random jitter and honor the Ratelimit-Reset header.
+- name: Header-Driven Pacing
+  description: Read Ratelimit-Limit, Ratelimit-Remaining, and Ratelimit-Reset on every response to stay under the limit rather than reacting only to 429s.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com
