@@ -1,0 +1,14 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/render-com-openapi.yml
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: Render API key created in the Render Dashboard, sent as an Authorization Bearer
+    token.
+  sources:
+  - openapi/render-com-openapi.yml

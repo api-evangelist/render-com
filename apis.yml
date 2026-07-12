@@ -343,6 +343,14 @@ apis:
     events occur (deploys, service and datastore lifecycle changes) - create, list,
     retrieve, update, and delete webhooks and inspect their delivered events.
 common:
+- type: TrustCenter
+  url: security/render-com-trust-center.yml
+- type: VulnerabilityDisclosure
+  url: security/render-com-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/render-com-domain-security.yml
+- type: Authentication
+  url: authentication/render-com-authentication.yml
 - type: GitHubOrganization
   url: https://github.com/renderinc
 - type: LinkedIn
@@ -357,6 +365,8 @@ common:
   url: rate-limits/render-com-rate-limits.yml
 - type: FinOps
   url: finops/render-com-finops.yml
+- url: https://render.com/blog/feed.rss
+  type: Blog
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
