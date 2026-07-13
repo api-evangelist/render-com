@@ -1,0 +1,7 @@
+---
+title: "Announcing High Availability for Render PostgreSQL"
+url: "https://render.com/blog/high-availability-postgresql"
+date: "2024-02-13"
+feed_url: "https://render.com/blog/feed.rss"
+---
+Enhance database reliability with Render PostgreSQL's High Availability. Pro users can now activate HA for fast, secure, and resilient connections—effortlessly.
