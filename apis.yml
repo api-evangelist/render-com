@@ -343,6 +343,8 @@ apis:
     events occur (deploys, service and datastore lifecycle changes) - create, list,
     retrieve, update, and delete webhooks and inspect their delivered events.
 common:
+- type: AgenticAccess
+  url: agentic-access/render-com-agentic-access.yml
 - type: TrustCenter
   url: security/render-com-trust-center.yml
 - type: VulnerabilityDisclosure
