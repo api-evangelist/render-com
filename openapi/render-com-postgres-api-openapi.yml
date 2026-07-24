@@ -1,0 +1,210 @@
+openapi: 3.0.3
+info:
+  title: Render Blueprints Postgres API
+  description: The Render REST API programmatically manages resources on the Render cloud application platform (PaaS). It exposes almost all of the functionality available in the Render Dashboard - services (web services, static sites, private services, background workers, cron jobs), deploys, custom domains, environment variables and groups, secret files, managed Postgres and Key Value (Redis-compatible) datastores, one-off jobs, persistent disks, Blueprints, projects and environments, workspaces and members, registry credentials, metrics, logs, and webhooks. All requests are authenticated with a Bearer API key created in the Render Dashboard. Real-time log streaming is available over a WebSocket surface (see the companion AsyncAPI document). This OpenAPI document models the REST surface; a subset of endpoints is confirmed against Render's public API reference and the remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+- url: https://api.render.com/v1
+  description: Render Public API
+security:
+- bearerAuth: []
+tags:
+- name: Postgres
+  description: Managed Render Postgres instances.
+paths:
+  /postgres:
+    get:
+      operationId: listPostgres
+      tags:
+      - Postgres
+      summary: List Postgres instances
+      responses:
+        '200':
+          description: A list of Postgres instances.
+    post:
+      operationId: createPostgres
+      tags:
+      - Postgres
+      summary: Create a Postgres instance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created Postgres instance.
+  /postgres/{postgresId}:
+    parameters:
+    - name: postgresId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: retrievePostgres
+      tags:
+      - Postgres
+      summary: Retrieve a Postgres instance
+      responses:
+        '200':
+          description: The requested Postgres instance.
+    patch:
+      operationId: updatePostgres
+      tags:
+      - Postgres
+      summary: Update a Postgres instance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated Postgres instance.
+    delete:
+      operationId: deletePostgres
+      tags:
+      - Postgres
+      summary: Delete a Postgres instance
+      responses:
+        '204':
+          description: The Postgres instance was deleted.
+  /postgres/{postgresId}/connection-info:
+    parameters:
+    - name: postgresId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: retrievePostgresConnectionInfo
+      tags:
+      - Postgres
+      summary: Retrieve Postgres connection info
+      responses:
+        '200':
+          description: Connection strings and credentials.
+  /postgres/{postgresId}/suspend:
+    parameters:
+    - name: postgresId
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: suspendPostgres
+      tags:
+      - Postgres
+      summary: Suspend a Postgres instance
+      responses:
+        '202':
+          description: Suspend accepted.
+  /postgres/{postgresId}/resume:
+    parameters:
+    - name: postgresId
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: resumePostgres
+      tags:
+      - Postgres
+      summary: Resume a Postgres instance
+      responses:
+        '202':
+          description: Resume accepted.
+  /postgres/{postgresId}/export:
+    parameters:
+    - name: postgresId
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: createPostgresExport
+      tags:
+      - Postgres
+      summary: Trigger a Postgres export
+      responses:
+        '201':
+          description: The triggered export.
+  /postgres/{postgresId}/exports:
+    parameters:
+    - name: postgresId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: listPostgresExports
+      tags:
+      - Postgres
+      summary: List Postgres exports
+      responses:
+        '200':
+          description: A list of exports.
+  /postgres/{postgresId}/recovery-info:
+    parameters:
+    - name: postgresId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: retrievePostgresRecoveryInfo
+      tags:
+      - Postgres
+      summary: Retrieve point-in-time recovery info
+      responses:
+        '200':
+          description: Recovery window information.
+  /postgres/{postgresId}/recovery:
+    parameters:
+    - name: postgresId
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: triggerPostgresRecovery
+      tags:
+      - Postgres
+      summary: Trigger a point-in-time recovery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The recovery result.
+  /postgres/{postgresId}/failover:
+    parameters:
+    - name: postgresId
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: triggerPostgresFailover
+      tags:
+      - Postgres
+      summary: Trigger a Postgres failover
+      responses:
+        '202':
+          description: Failover accepted.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.

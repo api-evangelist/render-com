@@ -1,0 +1,105 @@
+openapi: 3.0.3
+info:
+  title: Render Blueprints Workspaces API
+  description: The Render REST API programmatically manages resources on the Render cloud application platform (PaaS). It exposes almost all of the functionality available in the Render Dashboard - services (web services, static sites, private services, background workers, cron jobs), deploys, custom domains, environment variables and groups, secret files, managed Postgres and Key Value (Redis-compatible) datastores, one-off jobs, persistent disks, Blueprints, projects and environments, workspaces and members, registry credentials, metrics, logs, and webhooks. All requests are authenticated with a Bearer API key created in the Render Dashboard. Real-time log streaming is available over a WebSocket surface (see the companion AsyncAPI document). This OpenAPI document models the REST surface; a subset of endpoints is confirmed against Render's public API reference and the remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+- url: https://api.render.com/v1
+  description: Render Public API
+security:
+- bearerAuth: []
+tags:
+- name: Workspaces
+  description: Workspaces (owners) and members.
+paths:
+  /owners:
+    get:
+      operationId: listOwners
+      tags:
+      - Workspaces
+      summary: List workspaces
+      description: List the workspaces (owners) the API key can access.
+      responses:
+        '200':
+          description: A list of workspaces.
+  /owners/{ownerId}:
+    parameters:
+    - $ref: '#/components/parameters/OwnerId'
+    get:
+      operationId: retrieveOwner
+      tags:
+      - Workspaces
+      summary: Retrieve a workspace
+      responses:
+        '200':
+          description: The requested workspace.
+  /owners/{ownerId}/members:
+    parameters:
+    - $ref: '#/components/parameters/OwnerId'
+    get:
+      operationId: listOwnerMembers
+      tags:
+      - Workspaces
+      summary: List workspace members
+      responses:
+        '200':
+          description: A list of members.
+  /owners/{ownerId}/members/{userId}:
+    parameters:
+    - $ref: '#/components/parameters/OwnerId'
+    - name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+    patch:
+      operationId: updateOwnerMember
+      tags:
+      - Workspaces
+      summary: Update a member's role
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated member.
+    delete:
+      operationId: removeOwnerMember
+      tags:
+      - Workspaces
+      summary: Remove a member
+      responses:
+        '204':
+          description: The member was removed.
+  /owners/{ownerId}/audit-logs:
+    parameters:
+    - $ref: '#/components/parameters/OwnerId'
+    get:
+      operationId: listAuditLogs
+      tags:
+      - Workspaces
+      summary: List workspace audit logs
+      responses:
+        '200':
+          description: A list of audit log entries.
+components:
+  parameters:
+    OwnerId:
+      name: ownerId
+      in: path
+      required: true
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.

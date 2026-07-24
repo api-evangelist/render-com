@@ -1,0 +1,122 @@
+openapi: 3.0.3
+info:
+  title: Render Blueprints Logs API
+  description: The Render REST API programmatically manages resources on the Render cloud application platform (PaaS). It exposes almost all of the functionality available in the Render Dashboard - services (web services, static sites, private services, background workers, cron jobs), deploys, custom domains, environment variables and groups, secret files, managed Postgres and Key Value (Redis-compatible) datastores, one-off jobs, persistent disks, Blueprints, projects and environments, workspaces and members, registry credentials, metrics, logs, and webhooks. All requests are authenticated with a Bearer API key created in the Render Dashboard. Real-time log streaming is available over a WebSocket surface (see the companion AsyncAPI document). This OpenAPI document models the REST surface; a subset of endpoints is confirmed against Render's public API reference and the remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+- url: https://api.render.com/v1
+  description: Render Public API
+security:
+- bearerAuth: []
+tags:
+- name: Logs
+  description: Historical log queries. Real-time streaming is over WebSocket.
+paths:
+  /logs:
+    get:
+      operationId: listLogs
+      tags:
+      - Logs
+      summary: List logs
+      description: List logs matching the provided filters. Logs are paginated by start and end timestamps. For real-time streaming use the WebSocket endpoint GET /logs/subscribe (see the companion AsyncAPI document).
+      parameters:
+      - name: ownerId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: resource
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: startTime
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: endTime
+        in: query
+        schema:
+          type: string
+          format: date-time
+      - name: level
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+      - name: text
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 20
+      responses:
+        '200':
+          description: A page of logs.
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /logs/subscribe:
+    get:
+      operationId: subscribeLogs
+      tags:
+      - Logs
+      summary: Subscribe to new logs (WebSocket)
+      description: Upgrades the connection to a WebSocket (wss://api.render.com/v1/logs/subscribe) and streams log messages in real time as they are generated, matching the provided filters. All resources must be in the same region and belong to the same owner. This is a documented WebSocket surface; the streamed message schema is modeled in the companion AsyncAPI document (asyncapi/render-com-asyncapi.yml). A 101 response indicates a successful upgrade.
+      parameters:
+      - name: ownerId
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: resource
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: level
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+      - name: text
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        '101':
+          description: Switching Protocols - the connection is upgraded to a WebSocket.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Authentication failed or the API key is missing.
+    TooManyRequests:
+      description: Rate limit exceeded. Returns a 429 with Ratelimit-Limit, Ratelimit-Remaining, and Ratelimit-Reset headers.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.

@@ -1,0 +1,82 @@
+openapi: 3.0.3
+info:
+  title: Render Blueprints Jobs API
+  description: The Render REST API programmatically manages resources on the Render cloud application platform (PaaS). It exposes almost all of the functionality available in the Render Dashboard - services (web services, static sites, private services, background workers, cron jobs), deploys, custom domains, environment variables and groups, secret files, managed Postgres and Key Value (Redis-compatible) datastores, one-off jobs, persistent disks, Blueprints, projects and environments, workspaces and members, registry credentials, metrics, logs, and webhooks. All requests are authenticated with a Bearer API key created in the Render Dashboard. Real-time log streaming is available over a WebSocket surface (see the companion AsyncAPI document). This OpenAPI document models the REST surface; a subset of endpoints is confirmed against Render's public API reference and the remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+- url: https://api.render.com/v1
+  description: Render Public API
+security:
+- bearerAuth: []
+tags:
+- name: Jobs
+  description: One-off jobs run in a service environment.
+paths:
+  /services/{serviceId}/jobs:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: listJobs
+      tags:
+      - Jobs
+      summary: List one-off jobs
+      responses:
+        '200':
+          description: A list of jobs for the service.
+    post:
+      operationId: createJob
+      tags:
+      - Jobs
+      summary: Create a one-off job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startCommand:
+                  type: string
+      responses:
+        '201':
+          description: The created job.
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /services/{serviceId}/jobs/{jobId}:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    - name: jobId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: retrieveJob
+      tags:
+      - Jobs
+      summary: Retrieve a one-off job
+      responses:
+        '200':
+          description: The requested job.
+components:
+  parameters:
+    ServiceId:
+      name: serviceId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    TooManyRequests:
+      description: Rate limit exceeded. Returns a 429 with Ratelimit-Limit, Ratelimit-Remaining, and Ratelimit-Reset headers.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.

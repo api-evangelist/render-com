@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: Render Blueprints API
+  description: The Render REST API programmatically manages resources on the Render cloud application platform (PaaS). It exposes almost all of the functionality available in the Render Dashboard - services (web services, static sites, private services, background workers, cron jobs), deploys, custom domains, environment variables and groups, secret files, managed Postgres and Key Value (Redis-compatible) datastores, one-off jobs, persistent disks, Blueprints, projects and environments, workspaces and members, registry credentials, metrics, logs, and webhooks. All requests are authenticated with a Bearer API key created in the Render Dashboard. Real-time log streaming is available over a WebSocket surface (see the companion AsyncAPI document). This OpenAPI document models the REST surface; a subset of endpoints is confirmed against Render's public API reference and the remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+- url: https://api.render.com/v1
+  description: Render Public API
+security:
+- bearerAuth: []
+tags:
+- name: Blueprints
+  description: Infrastructure-as-code Blueprints (render.yaml).
+paths:
+  /blueprints:
+    get:
+      operationId: listBlueprints
+      tags:
+      - Blueprints
+      summary: List Blueprints
+      responses:
+        '200':
+          description: A list of Blueprints.
+  /blueprints/validate:
+    post:
+      operationId: validateBlueprint
+      tags:
+      - Blueprints
+      summary: Validate a Blueprint spec
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Validation result.
+  /blueprints/{blueprintId}:
+    parameters:
+    - name: blueprintId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: retrieveBlueprint
+      tags:
+      - Blueprints
+      summary: Retrieve a Blueprint
+      responses:
+        '200':
+          description: The requested Blueprint.
+    patch:
+      operationId: updateBlueprint
+      tags:
+      - Blueprints
+      summary: Update a Blueprint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated Blueprint.
+    delete:
+      operationId: disconnectBlueprint
+      tags:
+      - Blueprints
+      summary: Disconnect a Blueprint
+      responses:
+        '204':
+          description: The Blueprint was disconnected.
+  /blueprints/{blueprintId}/syncs:
+    parameters:
+    - name: blueprintId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: listBlueprintSyncs
+      tags:
+      - Blueprints
+      summary: List Blueprint syncs
+      responses:
+        '200':
+          description: A list of Blueprint syncs.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.

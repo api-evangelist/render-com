@@ -1,0 +1,100 @@
+openapi: 3.0.3
+info:
+  title: Render Blueprints Webhooks API
+  description: The Render REST API programmatically manages resources on the Render cloud application platform (PaaS). It exposes almost all of the functionality available in the Render Dashboard - services (web services, static sites, private services, background workers, cron jobs), deploys, custom domains, environment variables and groups, secret files, managed Postgres and Key Value (Redis-compatible) datastores, one-off jobs, persistent disks, Blueprints, projects and environments, workspaces and members, registry credentials, metrics, logs, and webhooks. All requests are authenticated with a Bearer API key created in the Render Dashboard. Real-time log streaming is available over a WebSocket surface (see the companion AsyncAPI document). This OpenAPI document models the REST surface; a subset of endpoints is confirmed against Render's public API reference and the remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+- url: https://api.render.com/v1
+  description: Render Public API
+security:
+- bearerAuth: []
+tags:
+- name: Webhooks
+  description: Outbound webhooks for platform events.
+paths:
+  /webhooks:
+    get:
+      operationId: listWebhooks
+      tags:
+      - Webhooks
+      summary: List webhooks
+      responses:
+        '200':
+          description: A list of webhooks.
+    post:
+      operationId: createWebhook
+      tags:
+      - Webhooks
+      summary: Create a webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created webhook.
+  /webhooks/{webhookId}:
+    parameters:
+    - name: webhookId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: retrieveWebhook
+      tags:
+      - Webhooks
+      summary: Retrieve a webhook
+      responses:
+        '200':
+          description: The requested webhook.
+    patch:
+      operationId: updateWebhook
+      tags:
+      - Webhooks
+      summary: Update a webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated webhook.
+    delete:
+      operationId: deleteWebhook
+      tags:
+      - Webhooks
+      summary: Delete a webhook
+      responses:
+        '204':
+          description: The webhook was deleted.
+  /webhooks/{webhookId}/events:
+    parameters:
+    - name: webhookId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: listWebhookEvents
+      tags:
+      - Webhooks
+      summary: List webhook events
+      responses:
+        '200':
+          description: A list of delivered webhook events.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.

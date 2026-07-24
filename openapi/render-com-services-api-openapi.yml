@@ -1,0 +1,241 @@
+openapi: 3.0.3
+info:
+  title: Render Blueprints Services API
+  description: The Render REST API programmatically manages resources on the Render cloud application platform (PaaS). It exposes almost all of the functionality available in the Render Dashboard - services (web services, static sites, private services, background workers, cron jobs), deploys, custom domains, environment variables and groups, secret files, managed Postgres and Key Value (Redis-compatible) datastores, one-off jobs, persistent disks, Blueprints, projects and environments, workspaces and members, registry credentials, metrics, logs, and webhooks. All requests are authenticated with a Bearer API key created in the Render Dashboard. Real-time log streaming is available over a WebSocket surface (see the companion AsyncAPI document). This OpenAPI document models the REST surface; a subset of endpoints is confirmed against Render's public API reference and the remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+- url: https://api.render.com/v1
+  description: Render Public API
+security:
+- bearerAuth: []
+tags:
+- name: Services
+  description: Web services, static sites, private services, background workers, and cron jobs.
+paths:
+  /services:
+    get:
+      operationId: listServices
+      tags:
+      - Services
+      summary: List services
+      description: List all services in the authorized workspaces, with filters and cursor pagination.
+      parameters:
+      - $ref: '#/components/parameters/Cursor'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A list of services.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createService
+      tags:
+      - Services
+      summary: Create a service
+      description: Create a new service (web service, static site, private service, background worker, or cron job).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created service.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /services/{serviceId}:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: retrieveService
+      tags:
+      - Services
+      summary: Retrieve a service
+      responses:
+        '200':
+          description: The requested service.
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: updateService
+      tags:
+      - Services
+      summary: Update a service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated service.
+    delete:
+      operationId: deleteService
+      tags:
+      - Services
+      summary: Delete a service
+      responses:
+        '204':
+          description: The service was deleted.
+  /services/{serviceId}/restart:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: restartService
+      tags:
+      - Services
+      summary: Restart a service
+      responses:
+        '202':
+          description: Restart accepted.
+  /services/{serviceId}/suspend:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: suspendService
+      tags:
+      - Services
+      summary: Suspend a service
+      responses:
+        '202':
+          description: Suspend accepted.
+  /services/{serviceId}/resume:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: resumeService
+      tags:
+      - Services
+      summary: Resume a service
+      responses:
+        '202':
+          description: Resume accepted.
+  /services/{serviceId}/scale:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: scaleService
+      tags:
+      - Services
+      summary: Scale a service
+      description: Set the number of running instances for a service (manual scaling).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                numInstances:
+                  type: integer
+      responses:
+        '202':
+          description: Scale accepted.
+  /services/{serviceId}/autoscaling:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    put:
+      operationId: updateAutoscaling
+      tags:
+      - Services
+      summary: Update autoscaling
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated autoscaling configuration.
+    delete:
+      operationId: disableAutoscaling
+      tags:
+      - Services
+      summary: Disable autoscaling
+      responses:
+        '204':
+          description: Autoscaling disabled.
+  /services/{serviceId}/cache/purge:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: purgeCache
+      tags:
+      - Services
+      summary: Purge static site cache
+      responses:
+        '202':
+          description: Cache purge accepted.
+  /services/{serviceId}/preview:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: createServicePreview
+      tags:
+      - Services
+      summary: Create a service preview
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created preview service.
+  /services/{serviceId}/events:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: listEvents
+      tags:
+      - Services
+      summary: List service events
+      responses:
+        '200':
+          description: A list of service events.
+components:
+  parameters:
+    ServiceId:
+      name: serviceId
+      in: path
+      required: true
+      schema:
+        type: string
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+    Unauthorized:
+      description: Authentication failed or the API key is missing.
+    TooManyRequests:
+      description: Rate limit exceeded. Returns a 429 with Ratelimit-Limit, Ratelimit-Remaining, and Ratelimit-Reset headers.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.

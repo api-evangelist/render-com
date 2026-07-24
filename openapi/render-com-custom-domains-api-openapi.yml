@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: Render Blueprints Custom Domains API
+  description: The Render REST API programmatically manages resources on the Render cloud application platform (PaaS). It exposes almost all of the functionality available in the Render Dashboard - services (web services, static sites, private services, background workers, cron jobs), deploys, custom domains, environment variables and groups, secret files, managed Postgres and Key Value (Redis-compatible) datastores, one-off jobs, persistent disks, Blueprints, projects and environments, workspaces and members, registry credentials, metrics, logs, and webhooks. All requests are authenticated with a Bearer API key created in the Render Dashboard. Real-time log streaming is available over a WebSocket surface (see the companion AsyncAPI document). This OpenAPI document models the REST surface; a subset of endpoints is confirmed against Render's public API reference and the remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+- url: https://api.render.com/v1
+  description: Render Public API
+security:
+- bearerAuth: []
+tags:
+- name: Custom Domains
+  description: Custom domains attached to a service, with DNS and TLS.
+paths:
+  /services/{serviceId}/custom-domains:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: listCustomDomains
+      tags:
+      - Custom Domains
+      summary: List custom domains
+      responses:
+        '200':
+          description: A list of custom domains.
+    post:
+      operationId: createCustomDomain
+      tags:
+      - Custom Domains
+      summary: Add a custom domain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: The added custom domain.
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /services/{serviceId}/custom-domains/{customDomainIdOrName}:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    - name: customDomainIdOrName
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: retrieveCustomDomain
+      tags:
+      - Custom Domains
+      summary: Retrieve a custom domain
+      responses:
+        '200':
+          description: The requested custom domain.
+    delete:
+      operationId: deleteCustomDomain
+      tags:
+      - Custom Domains
+      summary: Delete a custom domain
+      responses:
+        '204':
+          description: The custom domain was deleted.
+  /services/{serviceId}/custom-domains/{customDomainIdOrName}/verify:
+    parameters:
+    - $ref: '#/components/parameters/ServiceId'
+    - name: customDomainIdOrName
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: verifyCustomDomain
+      tags:
+      - Custom Domains
+      summary: Verify a custom domain
+      responses:
+        '200':
+          description: Verification result.
+components:
+  parameters:
+    ServiceId:
+      name: serviceId
+      in: path
+      required: true
+      schema:
+        type: string
+  responses:
+    TooManyRequests:
+      description: Rate limit exceeded. Returns a 429 with Ratelimit-Limit, Ratelimit-Remaining, and Ratelimit-Reset headers.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.

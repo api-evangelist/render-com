@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info:
+  title: Render Blueprints Disks API
+  description: The Render REST API programmatically manages resources on the Render cloud application platform (PaaS). It exposes almost all of the functionality available in the Render Dashboard - services (web services, static sites, private services, background workers, cron jobs), deploys, custom domains, environment variables and groups, secret files, managed Postgres and Key Value (Redis-compatible) datastores, one-off jobs, persistent disks, Blueprints, projects and environments, workspaces and members, registry credentials, metrics, logs, and webhooks. All requests are authenticated with a Bearer API key created in the Render Dashboard. Real-time log streaming is available over a WebSocket surface (see the companion AsyncAPI document). This OpenAPI document models the REST surface; a subset of endpoints is confirmed against Render's public API reference and the remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+- url: https://api.render.com/v1
+  description: Render Public API
+security:
+- bearerAuth: []
+tags:
+- name: Disks
+  description: Persistent disks and snapshots.
+paths:
+  /disks:
+    get:
+      operationId: listDisks
+      tags:
+      - Disks
+      summary: List disks
+      responses:
+        '200':
+          description: A list of disks.
+    post:
+      operationId: createDisk
+      tags:
+      - Disks
+      summary: Add a disk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created disk.
+  /disks/{diskId}:
+    parameters:
+    - name: diskId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: retrieveDisk
+      tags:
+      - Disks
+      summary: Retrieve a disk
+      responses:
+        '200':
+          description: The requested disk.
+    patch:
+      operationId: updateDisk
+      tags:
+      - Disks
+      summary: Update a disk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated disk.
+    delete:
+      operationId: deleteDisk
+      tags:
+      - Disks
+      summary: Delete a disk
+      responses:
+        '204':
+          description: The disk was deleted.
+  /disks/{diskId}/snapshots:
+    parameters:
+    - name: diskId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: listDiskSnapshots
+      tags:
+      - Disks
+      summary: List disk snapshots
+      responses:
+        '200':
+          description: A list of snapshots.
+  /disks/{diskId}/snapshots/restore:
+    parameters:
+    - name: diskId
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      operationId: restoreDiskSnapshot
+      tags:
+      - Disks
+      summary: Restore a disk from a snapshot
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '202':
+          description: Restore accepted.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.

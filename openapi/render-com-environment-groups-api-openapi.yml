@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Render Blueprints Environment Groups API
+  description: The Render REST API programmatically manages resources on the Render cloud application platform (PaaS). It exposes almost all of the functionality available in the Render Dashboard - services (web services, static sites, private services, background workers, cron jobs), deploys, custom domains, environment variables and groups, secret files, managed Postgres and Key Value (Redis-compatible) datastores, one-off jobs, persistent disks, Blueprints, projects and environments, workspaces and members, registry credentials, metrics, logs, and webhooks. All requests are authenticated with a Bearer API key created in the Render Dashboard. Real-time log streaming is available over a WebSocket surface (see the companion AsyncAPI document). This OpenAPI document models the REST surface; a subset of endpoints is confirmed against Render's public API reference and the remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+- url: https://api.render.com/v1
+  description: Render Public API
+security:
+- bearerAuth: []
+tags:
+- name: Environment Groups
+  description: Reusable groups of environment variables and secret files.
+paths:
+  /env-groups:
+    get:
+      operationId: listEnvGroups
+      tags:
+      - Environment Groups
+      summary: List environment groups
+      responses:
+        '200':
+          description: A list of environment groups.
+    post:
+      operationId: createEnvGroup
+      tags:
+      - Environment Groups
+      summary: Create an environment group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created environment group.
+  /env-groups/{envGroupId}:
+    parameters:
+    - name: envGroupId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      operationId: retrieveEnvGroup
+      tags:
+      - Environment Groups
+      summary: Retrieve an environment group
+      responses:
+        '200':
+          description: The requested environment group.
+    patch:
+      operationId: updateEnvGroup
+      tags:
+      - Environment Groups
+      summary: Update an environment group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated environment group.
+    delete:
+      operationId: deleteEnvGroup
+      tags:
+      - Environment Groups
+      summary: Delete an environment group
+      responses:
+        '204':
+          description: The environment group was deleted.
+  /env-groups/{envGroupId}/env-vars/{envVarKey}:
+    parameters:
+    - name: envGroupId
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: envVarKey
+      in: path
+      required: true
+      schema:
+        type: string
+    put:
+      operationId: upsertEnvGroupEnvVar
+      tags:
+      - Environment Groups
+      summary: Add or update a variable in an environment group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The upserted variable.
+    delete:
+      operationId: deleteEnvGroupEnvVar
+      tags:
+      - Environment Groups
+      summary: Delete a variable from an environment group
+      responses:
+        '204':
+          description: The variable was deleted.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.
