@@ -1,0 +1,1515 @@
+openapi: 3.0.3
+info:
+  title: Render API
+  description: >-
+    The Render REST API programmatically manages resources on the Render cloud
+    application platform (PaaS). It exposes almost all of the functionality
+    available in the Render Dashboard - services (web services, static sites,
+    private services, background workers, cron jobs), deploys, custom domains,
+    environment variables and groups, secret files, managed Postgres and Key
+    Value (Redis-compatible) datastores, one-off jobs, persistent disks,
+    Blueprints, projects and environments, workspaces and members, registry
+    credentials, metrics, logs, and webhooks. All requests are authenticated
+    with a Bearer API key created in the Render Dashboard. Real-time log
+    streaming is available over a WebSocket surface (see the companion AsyncAPI
+    document). This OpenAPI document models the REST surface; a subset of
+    endpoints is confirmed against Render's public API reference and the
+    remainder follow Render's documented, consistent REST conventions.
+  version: '1.0'
+  contact:
+    name: Render
+    url: https://render.com
+  license:
+    name: Proprietary
+    url: https://render.com/terms
+servers:
+  - url: https://api.render.com/v1
+    description: Render Public API
+security:
+  - bearerAuth: []
+tags:
+  - name: Services
+    description: Web services, static sites, private services, background workers, and cron jobs.
+  - name: Deploys
+    description: Build and release deploys for a service, plus rollback.
+  - name: Custom Domains
+    description: Custom domains attached to a service, with DNS and TLS.
+  - name: Environment Variables
+    description: Per-service environment variables and secret files.
+  - name: Environment Groups
+    description: Reusable groups of environment variables and secret files.
+  - name: Postgres
+    description: Managed Render Postgres instances.
+  - name: Key Value
+    description: Redis-compatible Key Value datastores.
+  - name: Jobs
+    description: One-off jobs run in a service environment.
+  - name: Disks
+    description: Persistent disks and snapshots.
+  - name: Blueprints
+    description: Infrastructure-as-code Blueprints (render.yaml).
+  - name: Projects
+    description: Projects and their environments.
+  - name: Environments
+    description: Environments within a project.
+  - name: Workspaces
+    description: Workspaces (owners) and members.
+  - name: Registry Credentials
+    description: Container registry credentials.
+  - name: Metrics
+    description: Time-series metrics for services and datastores.
+  - name: Logs
+    description: Historical log queries. Real-time streaming is over WebSocket.
+  - name: Webhooks
+    description: Outbound webhooks for platform events.
+paths:
+  /services:
+    get:
+      operationId: listServices
+      tags: [Services]
+      summary: List services
+      description: List all services in the authorized workspaces, with filters and cursor pagination.
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: A list of services.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      operationId: createService
+      tags: [Services]
+      summary: Create a service
+      description: Create a new service (web service, static site, private service, background worker, or cron job).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created service.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /services/{serviceId}:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: retrieveService
+      tags: [Services]
+      summary: Retrieve a service
+      responses:
+        '200':
+          description: The requested service.
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      operationId: updateService
+      tags: [Services]
+      summary: Update a service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated service.
+    delete:
+      operationId: deleteService
+      tags: [Services]
+      summary: Delete a service
+      responses:
+        '204':
+          description: The service was deleted.
+  /services/{serviceId}/deploys:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: listDeploys
+      tags: [Deploys]
+      summary: List deploys
+      responses:
+        '200':
+          description: A list of deploys for the service.
+    post:
+      operationId: createDeploy
+      tags: [Deploys]
+      summary: Trigger a deploy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The triggered deploy.
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /services/{serviceId}/deploys/{deployId}:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+      - $ref: '#/components/parameters/DeployId'
+    get:
+      operationId: retrieveDeploy
+      tags: [Deploys]
+      summary: Retrieve a deploy
+      responses:
+        '200':
+          description: The requested deploy.
+  /services/{serviceId}/deploys/{deployId}/cancel:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+      - $ref: '#/components/parameters/DeployId'
+    post:
+      operationId: cancelDeploy
+      tags: [Deploys]
+      summary: Cancel a deploy
+      responses:
+        '200':
+          description: The canceled deploy.
+  /services/{serviceId}/rollback:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: rollbackService
+      tags: [Deploys]
+      summary: Roll back a service
+      description: Roll a service back to a previous deploy.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The rollback deploy.
+  /services/{serviceId}/restart:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: restartService
+      tags: [Services]
+      summary: Restart a service
+      responses:
+        '202':
+          description: Restart accepted.
+  /services/{serviceId}/suspend:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: suspendService
+      tags: [Services]
+      summary: Suspend a service
+      responses:
+        '202':
+          description: Suspend accepted.
+  /services/{serviceId}/resume:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: resumeService
+      tags: [Services]
+      summary: Resume a service
+      responses:
+        '202':
+          description: Resume accepted.
+  /services/{serviceId}/scale:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: scaleService
+      tags: [Services]
+      summary: Scale a service
+      description: Set the number of running instances for a service (manual scaling).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                numInstances:
+                  type: integer
+      responses:
+        '202':
+          description: Scale accepted.
+  /services/{serviceId}/autoscaling:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    put:
+      operationId: updateAutoscaling
+      tags: [Services]
+      summary: Update autoscaling
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated autoscaling configuration.
+    delete:
+      operationId: disableAutoscaling
+      tags: [Services]
+      summary: Disable autoscaling
+      responses:
+        '204':
+          description: Autoscaling disabled.
+  /services/{serviceId}/cache/purge:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: purgeCache
+      tags: [Services]
+      summary: Purge static site cache
+      responses:
+        '202':
+          description: Cache purge accepted.
+  /services/{serviceId}/preview:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    post:
+      operationId: createServicePreview
+      tags: [Services]
+      summary: Create a service preview
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created preview service.
+  /services/{serviceId}/events:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: listEvents
+      tags: [Services]
+      summary: List service events
+      responses:
+        '200':
+          description: A list of service events.
+  /services/{serviceId}/custom-domains:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: listCustomDomains
+      tags: [Custom Domains]
+      summary: List custom domains
+      responses:
+        '200':
+          description: A list of custom domains.
+    post:
+      operationId: createCustomDomain
+      tags: [Custom Domains]
+      summary: Add a custom domain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: The added custom domain.
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /services/{serviceId}/custom-domains/{customDomainIdOrName}:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+      - name: customDomainIdOrName
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveCustomDomain
+      tags: [Custom Domains]
+      summary: Retrieve a custom domain
+      responses:
+        '200':
+          description: The requested custom domain.
+    delete:
+      operationId: deleteCustomDomain
+      tags: [Custom Domains]
+      summary: Delete a custom domain
+      responses:
+        '204':
+          description: The custom domain was deleted.
+  /services/{serviceId}/custom-domains/{customDomainIdOrName}/verify:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+      - name: customDomainIdOrName
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      operationId: verifyCustomDomain
+      tags: [Custom Domains]
+      summary: Verify a custom domain
+      responses:
+        '200':
+          description: Verification result.
+  /services/{serviceId}/env-vars:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: listEnvVars
+      tags: [Environment Variables]
+      summary: List environment variables
+      responses:
+        '200':
+          description: A list of environment variables.
+    put:
+      operationId: replaceEnvVars
+      tags: [Environment Variables]
+      summary: Replace environment variables
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+      responses:
+        '200':
+          description: The updated environment variables.
+  /services/{serviceId}/env-vars/{envVarKey}:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+      - name: envVarKey
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveEnvVar
+      tags: [Environment Variables]
+      summary: Retrieve an environment variable
+      responses:
+        '200':
+          description: The requested environment variable.
+    put:
+      operationId: upsertEnvVar
+      tags: [Environment Variables]
+      summary: Add or update an environment variable
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                value:
+                  type: string
+      responses:
+        '200':
+          description: The upserted environment variable.
+    delete:
+      operationId: deleteEnvVar
+      tags: [Environment Variables]
+      summary: Delete an environment variable
+      responses:
+        '204':
+          description: The environment variable was deleted.
+  /services/{serviceId}/secret-files:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: listSecretFiles
+      tags: [Environment Variables]
+      summary: List secret files
+      responses:
+        '200':
+          description: A list of secret files.
+    put:
+      operationId: replaceSecretFiles
+      tags: [Environment Variables]
+      summary: Replace secret files
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+      responses:
+        '200':
+          description: The updated secret files.
+  /services/{serviceId}/secret-files/{secretFileName}:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+      - name: secretFileName
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      operationId: upsertSecretFile
+      tags: [Environment Variables]
+      summary: Add or update a secret file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The upserted secret file.
+    delete:
+      operationId: deleteSecretFile
+      tags: [Environment Variables]
+      summary: Delete a secret file
+      responses:
+        '204':
+          description: The secret file was deleted.
+  /env-groups:
+    get:
+      operationId: listEnvGroups
+      tags: [Environment Groups]
+      summary: List environment groups
+      responses:
+        '200':
+          description: A list of environment groups.
+    post:
+      operationId: createEnvGroup
+      tags: [Environment Groups]
+      summary: Create an environment group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created environment group.
+  /env-groups/{envGroupId}:
+    parameters:
+      - name: envGroupId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveEnvGroup
+      tags: [Environment Groups]
+      summary: Retrieve an environment group
+      responses:
+        '200':
+          description: The requested environment group.
+    patch:
+      operationId: updateEnvGroup
+      tags: [Environment Groups]
+      summary: Update an environment group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated environment group.
+    delete:
+      operationId: deleteEnvGroup
+      tags: [Environment Groups]
+      summary: Delete an environment group
+      responses:
+        '204':
+          description: The environment group was deleted.
+  /env-groups/{envGroupId}/env-vars/{envVarKey}:
+    parameters:
+      - name: envGroupId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: envVarKey
+        in: path
+        required: true
+        schema:
+          type: string
+    put:
+      operationId: upsertEnvGroupEnvVar
+      tags: [Environment Groups]
+      summary: Add or update a variable in an environment group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The upserted variable.
+    delete:
+      operationId: deleteEnvGroupEnvVar
+      tags: [Environment Groups]
+      summary: Delete a variable from an environment group
+      responses:
+        '204':
+          description: The variable was deleted.
+  /postgres:
+    get:
+      operationId: listPostgres
+      tags: [Postgres]
+      summary: List Postgres instances
+      responses:
+        '200':
+          description: A list of Postgres instances.
+    post:
+      operationId: createPostgres
+      tags: [Postgres]
+      summary: Create a Postgres instance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created Postgres instance.
+  /postgres/{postgresId}:
+    parameters:
+      - name: postgresId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrievePostgres
+      tags: [Postgres]
+      summary: Retrieve a Postgres instance
+      responses:
+        '200':
+          description: The requested Postgres instance.
+    patch:
+      operationId: updatePostgres
+      tags: [Postgres]
+      summary: Update a Postgres instance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated Postgres instance.
+    delete:
+      operationId: deletePostgres
+      tags: [Postgres]
+      summary: Delete a Postgres instance
+      responses:
+        '204':
+          description: The Postgres instance was deleted.
+  /postgres/{postgresId}/connection-info:
+    parameters:
+      - name: postgresId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrievePostgresConnectionInfo
+      tags: [Postgres]
+      summary: Retrieve Postgres connection info
+      responses:
+        '200':
+          description: Connection strings and credentials.
+  /postgres/{postgresId}/suspend:
+    parameters:
+      - name: postgresId
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      operationId: suspendPostgres
+      tags: [Postgres]
+      summary: Suspend a Postgres instance
+      responses:
+        '202':
+          description: Suspend accepted.
+  /postgres/{postgresId}/resume:
+    parameters:
+      - name: postgresId
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      operationId: resumePostgres
+      tags: [Postgres]
+      summary: Resume a Postgres instance
+      responses:
+        '202':
+          description: Resume accepted.
+  /postgres/{postgresId}/export:
+    parameters:
+      - name: postgresId
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      operationId: createPostgresExport
+      tags: [Postgres]
+      summary: Trigger a Postgres export
+      responses:
+        '201':
+          description: The triggered export.
+  /postgres/{postgresId}/exports:
+    parameters:
+      - name: postgresId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: listPostgresExports
+      tags: [Postgres]
+      summary: List Postgres exports
+      responses:
+        '200':
+          description: A list of exports.
+  /postgres/{postgresId}/recovery-info:
+    parameters:
+      - name: postgresId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrievePostgresRecoveryInfo
+      tags: [Postgres]
+      summary: Retrieve point-in-time recovery info
+      responses:
+        '200':
+          description: Recovery window information.
+  /postgres/{postgresId}/recovery:
+    parameters:
+      - name: postgresId
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      operationId: triggerPostgresRecovery
+      tags: [Postgres]
+      summary: Trigger a point-in-time recovery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The recovery result.
+  /postgres/{postgresId}/failover:
+    parameters:
+      - name: postgresId
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      operationId: triggerPostgresFailover
+      tags: [Postgres]
+      summary: Trigger a Postgres failover
+      responses:
+        '202':
+          description: Failover accepted.
+  /key-value:
+    get:
+      operationId: listKeyValue
+      tags: [Key Value]
+      summary: List Key Value instances
+      responses:
+        '200':
+          description: A list of Key Value instances.
+    post:
+      operationId: createKeyValue
+      tags: [Key Value]
+      summary: Create a Key Value instance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created Key Value instance.
+  /key-value/{keyValueId}:
+    parameters:
+      - name: keyValueId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveKeyValue
+      tags: [Key Value]
+      summary: Retrieve a Key Value instance
+      responses:
+        '200':
+          description: The requested Key Value instance.
+    patch:
+      operationId: updateKeyValue
+      tags: [Key Value]
+      summary: Update a Key Value instance
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated Key Value instance.
+    delete:
+      operationId: deleteKeyValue
+      tags: [Key Value]
+      summary: Delete a Key Value instance
+      responses:
+        '204':
+          description: The Key Value instance was deleted.
+  /key-value/{keyValueId}/connection-info:
+    parameters:
+      - name: keyValueId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveKeyValueConnectionInfo
+      tags: [Key Value]
+      summary: Retrieve Key Value connection info
+      responses:
+        '200':
+          description: Connection strings and credentials.
+  /services/{serviceId}/jobs:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+    get:
+      operationId: listJobs
+      tags: [Jobs]
+      summary: List one-off jobs
+      responses:
+        '200':
+          description: A list of jobs for the service.
+    post:
+      operationId: createJob
+      tags: [Jobs]
+      summary: Create a one-off job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                startCommand:
+                  type: string
+      responses:
+        '201':
+          description: The created job.
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /services/{serviceId}/jobs/{jobId}:
+    parameters:
+      - $ref: '#/components/parameters/ServiceId'
+      - name: jobId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveJob
+      tags: [Jobs]
+      summary: Retrieve a one-off job
+      responses:
+        '200':
+          description: The requested job.
+  /disks:
+    get:
+      operationId: listDisks
+      tags: [Disks]
+      summary: List disks
+      responses:
+        '200':
+          description: A list of disks.
+    post:
+      operationId: createDisk
+      tags: [Disks]
+      summary: Add a disk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created disk.
+  /disks/{diskId}:
+    parameters:
+      - name: diskId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveDisk
+      tags: [Disks]
+      summary: Retrieve a disk
+      responses:
+        '200':
+          description: The requested disk.
+    patch:
+      operationId: updateDisk
+      tags: [Disks]
+      summary: Update a disk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated disk.
+    delete:
+      operationId: deleteDisk
+      tags: [Disks]
+      summary: Delete a disk
+      responses:
+        '204':
+          description: The disk was deleted.
+  /disks/{diskId}/snapshots:
+    parameters:
+      - name: diskId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: listDiskSnapshots
+      tags: [Disks]
+      summary: List disk snapshots
+      responses:
+        '200':
+          description: A list of snapshots.
+  /disks/{diskId}/snapshots/restore:
+    parameters:
+      - name: diskId
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      operationId: restoreDiskSnapshot
+      tags: [Disks]
+      summary: Restore a disk from a snapshot
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '202':
+          description: Restore accepted.
+  /blueprints:
+    get:
+      operationId: listBlueprints
+      tags: [Blueprints]
+      summary: List Blueprints
+      responses:
+        '200':
+          description: A list of Blueprints.
+  /blueprints/validate:
+    post:
+      operationId: validateBlueprint
+      tags: [Blueprints]
+      summary: Validate a Blueprint spec
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Validation result.
+  /blueprints/{blueprintId}:
+    parameters:
+      - name: blueprintId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveBlueprint
+      tags: [Blueprints]
+      summary: Retrieve a Blueprint
+      responses:
+        '200':
+          description: The requested Blueprint.
+    patch:
+      operationId: updateBlueprint
+      tags: [Blueprints]
+      summary: Update a Blueprint
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated Blueprint.
+    delete:
+      operationId: disconnectBlueprint
+      tags: [Blueprints]
+      summary: Disconnect a Blueprint
+      responses:
+        '204':
+          description: The Blueprint was disconnected.
+  /blueprints/{blueprintId}/syncs:
+    parameters:
+      - name: blueprintId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: listBlueprintSyncs
+      tags: [Blueprints]
+      summary: List Blueprint syncs
+      responses:
+        '200':
+          description: A list of Blueprint syncs.
+  /projects:
+    get:
+      operationId: listProjects
+      tags: [Projects]
+      summary: List projects
+      responses:
+        '200':
+          description: A list of projects.
+    post:
+      operationId: createProject
+      tags: [Projects]
+      summary: Create a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created project.
+  /projects/{projectId}:
+    parameters:
+      - name: projectId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveProject
+      tags: [Projects]
+      summary: Retrieve a project
+      responses:
+        '200':
+          description: The requested project.
+    patch:
+      operationId: updateProject
+      tags: [Projects]
+      summary: Update a project
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated project.
+    delete:
+      operationId: deleteProject
+      tags: [Projects]
+      summary: Delete a project
+      responses:
+        '204':
+          description: The project was deleted.
+  /environments:
+    get:
+      operationId: listEnvironments
+      tags: [Environments]
+      summary: List environments
+      responses:
+        '200':
+          description: A list of environments.
+    post:
+      operationId: createEnvironment
+      tags: [Environments]
+      summary: Create an environment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created environment.
+  /environments/{environmentId}:
+    parameters:
+      - name: environmentId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveEnvironment
+      tags: [Environments]
+      summary: Retrieve an environment
+      responses:
+        '200':
+          description: The requested environment.
+    patch:
+      operationId: updateEnvironment
+      tags: [Environments]
+      summary: Update an environment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated environment.
+    delete:
+      operationId: deleteEnvironment
+      tags: [Environments]
+      summary: Delete an environment
+      responses:
+        '204':
+          description: The environment was deleted.
+  /owners:
+    get:
+      operationId: listOwners
+      tags: [Workspaces]
+      summary: List workspaces
+      description: List the workspaces (owners) the API key can access.
+      responses:
+        '200':
+          description: A list of workspaces.
+  /owners/{ownerId}:
+    parameters:
+      - $ref: '#/components/parameters/OwnerId'
+    get:
+      operationId: retrieveOwner
+      tags: [Workspaces]
+      summary: Retrieve a workspace
+      responses:
+        '200':
+          description: The requested workspace.
+  /owners/{ownerId}/members:
+    parameters:
+      - $ref: '#/components/parameters/OwnerId'
+    get:
+      operationId: listOwnerMembers
+      tags: [Workspaces]
+      summary: List workspace members
+      responses:
+        '200':
+          description: A list of members.
+  /owners/{ownerId}/members/{userId}:
+    parameters:
+      - $ref: '#/components/parameters/OwnerId'
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+    patch:
+      operationId: updateOwnerMember
+      tags: [Workspaces]
+      summary: Update a member's role
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated member.
+    delete:
+      operationId: removeOwnerMember
+      tags: [Workspaces]
+      summary: Remove a member
+      responses:
+        '204':
+          description: The member was removed.
+  /owners/{ownerId}/audit-logs:
+    parameters:
+      - $ref: '#/components/parameters/OwnerId'
+    get:
+      operationId: listAuditLogs
+      tags: [Workspaces]
+      summary: List workspace audit logs
+      responses:
+        '200':
+          description: A list of audit log entries.
+  /registrycredentials:
+    get:
+      operationId: listRegistryCredentials
+      tags: [Registry Credentials]
+      summary: List registry credentials
+      responses:
+        '200':
+          description: A list of registry credentials.
+    post:
+      operationId: createRegistryCredential
+      tags: [Registry Credentials]
+      summary: Create a registry credential
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created registry credential.
+  /registrycredentials/{registryCredentialId}:
+    parameters:
+      - name: registryCredentialId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveRegistryCredential
+      tags: [Registry Credentials]
+      summary: Retrieve a registry credential
+      responses:
+        '200':
+          description: The requested registry credential.
+    patch:
+      operationId: updateRegistryCredential
+      tags: [Registry Credentials]
+      summary: Update a registry credential
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated registry credential.
+    delete:
+      operationId: deleteRegistryCredential
+      tags: [Registry Credentials]
+      summary: Delete a registry credential
+      responses:
+        '204':
+          description: The registry credential was deleted.
+  /metrics/cpu:
+    get:
+      operationId: getCpuMetrics
+      tags: [Metrics]
+      summary: Get CPU metrics
+      parameters:
+        - $ref: '#/components/parameters/MetricResource'
+      responses:
+        '200':
+          description: CPU time series.
+  /metrics/memory:
+    get:
+      operationId: getMemoryMetrics
+      tags: [Metrics]
+      summary: Get memory metrics
+      parameters:
+        - $ref: '#/components/parameters/MetricResource'
+      responses:
+        '200':
+          description: Memory time series.
+  /metrics/bandwidth:
+    get:
+      operationId: getBandwidthMetrics
+      tags: [Metrics]
+      summary: Get bandwidth metrics
+      parameters:
+        - $ref: '#/components/parameters/MetricResource'
+      responses:
+        '200':
+          description: Bandwidth time series.
+  /metrics/instance-count:
+    get:
+      operationId: getInstanceCountMetrics
+      tags: [Metrics]
+      summary: Get instance count metrics
+      parameters:
+        - $ref: '#/components/parameters/MetricResource'
+      responses:
+        '200':
+          description: Instance count time series.
+  /metrics/http-requests:
+    get:
+      operationId: getHttpRequestMetrics
+      tags: [Metrics]
+      summary: Get HTTP request metrics
+      parameters:
+        - $ref: '#/components/parameters/MetricResource'
+      responses:
+        '200':
+          description: HTTP request time series.
+  /metrics/active-connections:
+    get:
+      operationId: getActiveConnectionMetrics
+      tags: [Metrics]
+      summary: Get active connection metrics
+      parameters:
+        - $ref: '#/components/parameters/MetricResource'
+      responses:
+        '200':
+          description: Active connection time series.
+  /logs:
+    get:
+      operationId: listLogs
+      tags: [Logs]
+      summary: List logs
+      description: >-
+        List logs matching the provided filters. Logs are paginated by start
+        and end timestamps. For real-time streaming use the WebSocket endpoint
+        GET /logs/subscribe (see the companion AsyncAPI document).
+      parameters:
+        - name: ownerId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: resource
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: startTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endTime
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: level
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: text
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: A page of logs.
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /logs/subscribe:
+    get:
+      operationId: subscribeLogs
+      tags: [Logs]
+      summary: Subscribe to new logs (WebSocket)
+      description: >-
+        Upgrades the connection to a WebSocket (wss://api.render.com/v1/logs/subscribe)
+        and streams log messages in real time as they are generated, matching the
+        provided filters. All resources must be in the same region and belong to the
+        same owner. This is a documented WebSocket surface; the streamed message
+        schema is modeled in the companion AsyncAPI document
+        (asyncapi/render-com-asyncapi.yml). A 101 response indicates a successful
+        upgrade.
+      parameters:
+        - name: ownerId
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: resource
+          in: query
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: level
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: text
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '101':
+          description: Switching Protocols - the connection is upgraded to a WebSocket.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /webhooks:
+    get:
+      operationId: listWebhooks
+      tags: [Webhooks]
+      summary: List webhooks
+      responses:
+        '200':
+          description: A list of webhooks.
+    post:
+      operationId: createWebhook
+      tags: [Webhooks]
+      summary: Create a webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '201':
+          description: The created webhook.
+  /webhooks/{webhookId}:
+    parameters:
+      - name: webhookId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: retrieveWebhook
+      tags: [Webhooks]
+      summary: Retrieve a webhook
+      responses:
+        '200':
+          description: The requested webhook.
+    patch:
+      operationId: updateWebhook
+      tags: [Webhooks]
+      summary: Update a webhook
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: The updated webhook.
+    delete:
+      operationId: deleteWebhook
+      tags: [Webhooks]
+      summary: Delete a webhook
+      responses:
+        '204':
+          description: The webhook was deleted.
+  /webhooks/{webhookId}/events:
+    parameters:
+      - name: webhookId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      operationId: listWebhookEvents
+      tags: [Webhooks]
+      summary: List webhook events
+      responses:
+        '200':
+          description: A list of delivered webhook events.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: Render API key created in the Render Dashboard, sent as an Authorization Bearer token.
+  parameters:
+    ServiceId:
+      name: serviceId
+      in: path
+      required: true
+      schema:
+        type: string
+    DeployId:
+      name: deployId
+      in: path
+      required: true
+      schema:
+        type: string
+    OwnerId:
+      name: ownerId
+      in: path
+      required: true
+      schema:
+        type: string
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    MetricResource:
+      name: resource
+      in: query
+      required: true
+      schema:
+        type: array
+        items:
+          type: string
+  responses:
+    Unauthorized:
+      description: Authentication failed or the API key is missing.
+    NotFound:
+      description: The requested resource was not found.
+    TooManyRequests:
+      description: Rate limit exceeded. Returns a 429 with Ratelimit-Limit, Ratelimit-Remaining, and Ratelimit-Reset headers.
